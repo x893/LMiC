@@ -6,31 +6,17 @@
   <configuration>
     <name>Debug</name>
     <outputs>
-      <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\startup_stm32l1xx_md.s</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\system_stm32l1xx.h</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\system_stm32l1xx.c</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\hal-stm32.c</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\hal.h</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\stm32l1xx.h</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\aes.c</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\lmic.c</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\lmic.h</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\lorabase.h</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\oslmic.c</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\oslmic.h</file>
-      <file>$PROJ_DIR$\..\..\lmic-src\radio.c</file>
-      <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
-      <file>$PROJ_DIR$\main.c</file>
       <file>$PROJ_DIR$\..\main.c</file>
-      <file>$TOOLKIT_DIR$\CMSIS\Include\core_cmFunc.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\lmic.pbi</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
       <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\oslmic.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\lmic.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\startup_stm32l1xx_md.o</file>
       <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
+      <file>$PROJ_DIR$\Debug\Obj\oslmic.pbi</file>
+      <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
       <file>$PROJ_DIR$\Debug\Obj\hal-stm32.pbi</file>
       <file>$PROJ_DIR$\Debug\Obj\radio.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\startup_stm32l1xx_md.o</file>
-      <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
       <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
       <file>$PROJ_DIR$\Debug\Obj\aes.o</file>
       <file>$PROJ_DIR$\Debug\Obj\radio.o</file>
@@ -49,165 +35,55 @@
       <file>$TOOLKIT_DIR$\inc\c\xencoding_limits.h</file>
       <file>$PROJ_DIR$\Debug\List\join.map</file>
       <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
+      <file>$PROJ_DIR$\Debug\Obj\app.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\string.h</file>
       <file>$PROJ_DIR$\Debug\Obj\aes.pbi</file>
       <file>$TOOLKIT_DIR$\config\linker\ST\stm32l151xB.icf</file>
-      <file>$TOOLKIT_DIR$\inc\c\string.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\app.pbi</file>
       <file>$TOOLKIT_DIR$\CMSIS\Include\core_cmInstr.h</file>
-      <file>$PROJ_DIR$\Debug\Exe\join.hex</file>
-      <file>$PROJ_DIR$\Debug\Exe\join.out</file>
       <file>$TOOLKIT_DIR$\inc\c\DLib_Threads.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\join.out</file>
+      <file>$PROJ_DIR$\Debug\Exe\join.hex</file>
       <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
       <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
-      <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
       <file>$PROJ_DIR$\Debug\Obj\oslmic.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
       <file>$PROJ_DIR$\Debug\Obj\system_stm32l1xx.pbi</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\aes.c</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\startup_stm32l1xx_md.s</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\hal-stm32.c</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\stm32l1xx.h</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\system_stm32l1xx.c</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\system_stm32l1xx.h</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\hal.h</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\lmic.c</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\lmic.h</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\lorabase.h</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\oslmic.c</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\oslmic.h</file>
+      <file>$PROJ_DIR$\..\..\lmic-src\radio.c</file>
+      <file>$TOOLKIT_DIR$\CMSIS\Include\core_cmFunc.h</file>
     </outputs>
     <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\startup_stm32l1xx_md.s</name>
-      <outputs>
-        <tool>
-          <name>AARM</name>
-          <file> 23</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\system_stm32l1xx.c</name>
+      <name>$PROJ_DIR$\..\main.c</name>
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 35</file>
+          <file> 25</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 56</file>
+          <file> 41</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 5 29 54 25 13 51 30 32 40 50 47 18 28 16 1</file>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 5 29 54 25 13 51 30 32 40 50 47 18 28 16 1</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\hal-stm32.c</name>
-      <outputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 38</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 21</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9 5 29 54 47 18 28 16 1</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9 5 29 54 47 18 28 16 1</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\aes.c</name>
-      <outputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 26</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 43</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 11 45 25 13 51 30 32 40 50 33 52 4</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 11 45 25 13 51 30 32 40 50 33 52 4</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\lmic.c</name>
-      <outputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 31</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 17</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\oslmic.c</name>
-      <outputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 55</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 19</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\radio.c</name>
-      <outputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 27</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 22</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
         </tool>
       </inputs>
     </file>
@@ -216,76 +92,44 @@
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 39</file>
+          <file> 25</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 53</file>
+          <file> 41</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
         </tool>
       </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\main.c</name>
-      <outputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 39</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 53</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>[ROOT_NODE]</name>
-      <outputs>
-        <tool>
-          <name>ILINK</name>
-          <file> 41 49</file>
-        </tool>
-      </outputs>
     </file>
     <file>
       <name>$PROJ_DIR$\app.c</name>
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 37</file>
+          <file> 23</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 46</file>
+          <file> 29</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 8 11 45 25 13 51 30 32 40 50 33 52 4 9</file>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
         </tool>
       </inputs>
     </file>
@@ -294,19 +138,175 @@
       <outputs>
         <tool>
           <name>ILINK</name>
-          <file> 41</file>
+          <file> 27</file>
         </tool>
         <tool>
           <name>OBJCOPY</name>
-          <file> 48</file>
+          <file> 36</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ILINK</name>
-          <file> 44 26 38 31 39 55 27 23 35 20 34 24 42</file>
+          <file> 32 12 24 17 25 39 13 5 21 6 20 8 28</file>
         </tool>
       </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\lmic-src\aes.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 12</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 31</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 54 30 11 2 37 16 18 26 34 19 38 49</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 54 30 11 2 37 16 18 26 34 19 38 49</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\startup_stm32l1xx_md.s</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 5</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\hal-stm32.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 24</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 9</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52 46 15 40 33 3 14 56 48</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52 46 15 40 33 3 14 56 48</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\system_stm32l1xx.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 42</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 46 15 40 11 2 37 16 18 26 34 33 3 14 56 48</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 46 15 40 11 2 37 16 18 26 34 33 3 14 56 48</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\lmic-src\lmic.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 17</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 4</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\lmic-src\oslmic.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 39</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 7</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\lmic-src\radio.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 13</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 10</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 51 54 30 11 2 37 16 18 26 34 19 38 49 52</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 27 35</file>
+        </tool>
+      </outputs>
     </file>
     <forcedrebuild>
       <name>[REBUILD_ALL]</name>

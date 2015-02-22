@@ -147,6 +147,25 @@ static void hw_cfg_extirq (u1_t portidx, u1_t pin, u1_t irqcfg)
 	static const u1_t outputpins[] = { NSS_PORT, NSS_PIN, TX_PORT, TX_PIN, RX_PORT, RX_PIN };
 	static const u1_t inputpins[]  = { DIO0_PORT, DIO0_PIN, DIO1_PORT, DIO1_PIN, DIO2_PORT, DIO2_PIN };
 
+#elif CFG_x893_board
+	#warning X893 Board
+	#define NSS_PORT	0	// NSS: PA15, RFM98W
+	#define NSS_PIN		15
+
+	#define RST_PORT	1	// RST: PB15
+	#define RST_PIN		15
+
+	// input lines
+	#define DIO0_PORT	1 // DIO0: PB6 (line 5-9 irq handler)
+	#define DIO0_PIN	6
+	#define DIO1_PORT	1 // DIO1: PB7 (line 5-9 irq handler)
+	#define DIO1_PIN	7
+	#define DIO2_PORT	1 // DIO2: PB8 (line 5-9 irq handler)
+	#define DIO2_PIN	8
+
+	static const u1_t outputpins[] = { NSS_PORT, NSS_PIN };
+	static const u1_t inputpins[]  = { DIO0_PORT, DIO0_PIN, DIO1_PORT, DIO1_PIN, DIO2_PORT, DIO2_PIN };
+
 #else
 	#error Missing CFG_sx1276mb1_board/CFG_wimod_board!
 #endif
@@ -179,11 +198,15 @@ static void hal_io_init ()
 // val ==1  => tx 1, rx 0 ; val == 0 => tx 0, rx 1
 void hal_pin_rxtx (u1_t val)
 {
+#ifndef CFG_x893_board
 	ASSERT(val == 1 || val == 0);
 #ifndef CFG_sx1276mb1_board
 	setpin(GPIOx(RX_PORT), RX_PIN, ~val);
 #endif
 	setpin(GPIOx(TX_PORT), TX_PIN, val);
+#else
+	#warning X893 RXTX
+#endif
 }
 
 // set radio NSS pin to given value
@@ -458,13 +481,17 @@ void hal_failed ()
 // DEBUG CODE BELOW (use CFG_DEBUG)
 //////////////////////////////////////////////////////////////////////
 #ifdef CFG_DEBUG
+	#if CFG_x893_board
+		#define LED_PORT		GPIOB // use GPIO PB11 (LED1 on X893)
+		#define LED_PIN			11
+	#else
+		#define LED_PORT		GPIOA // use GPIO PA8 (LED4 on IMST, P11/PPS/EXT1_10/GPS6 on Blipper)
+		#define LED_PIN			8
+	#endif
 
-	#define LED_PORT		GPIOA // use GPIO PA8 (LED4 on IMST, P11/PPS/EXT1_10/GPS6 on Blipper)
-	#define LED_PIN			8
 	#define USART_TX_PORT	GPIOA
 	#define USART_TX_PIN	9
 	#define GPIO_AF_USART1	0x07
-
 void debug_init ()
 {
 	// configure LED pin as output

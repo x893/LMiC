@@ -32,7 +32,20 @@ enum { JOIN_GUARD_ms	  =  9000 };  // msecs - don't start Join Req/Acc transacti
 enum { TXRX_BCNEXT_secs   =	 2 };  // secs - earliest start after beacon time
 enum { RETRY_PERIOD_secs  =	 3 };  // secs - random period for retrying a confirmed send
 
-#if CFG_eu868 // EU868 spectrum ====================================================
+#if CFG_eu434 // EU434 spectrum ====================================================
+
+enum { MAX_CHANNELS = 8 };	  // library may not support all 16 channels
+enum { MAX_BANDS	= 4 };
+
+enum { LIMIT_CHANNELS = (1 << 4) };   // EU434 will never have more channels
+struct band_t {
+	u2_t	 txcap;  // duty cycle limitation: 1/txcap
+	s1_t	 txpow;  // maximum TX power
+	ostime_t avail;  // channel is blocked until this time
+};
+TYPEDEF_xref2band_t;
+
+#elif CFG_eu868 // EU868 spectrum ====================================================
 
 enum { MAX_CHANNELS = 8 };	  // library may not support all 16 channels
 enum { MAX_BANDS	= 4 };
@@ -135,7 +148,12 @@ struct lmic_t {
 	osjob_t	 osjob;
 
 	// Channel scheduling
-#if CFG_eu868
+#if CFG_eu434
+	band_t		bands[MAX_BANDS];
+	u4_t		channelFreq[MAX_CHANNELS];
+	u1_t		channelDrs[MAX_CHANNELS];
+	u2_t		channelMap;
+#elif CFG_eu868
 	band_t		bands[MAX_BANDS];
 	u4_t		channelFreq[MAX_CHANNELS];
 	u1_t		channelDrs[MAX_CHANNELS];

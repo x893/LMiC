@@ -172,7 +172,9 @@
 
 #define RXLORA_RXMODE_RSSI_REG_MODEM_CONFIG1 0x0A
 
-#ifdef CFG_sx1276_radio
+#ifdef CFG_RFM98W_radio
+	#define RXLORA_RXMODE_RSSI_REG_MODEM_CONFIG2	0x70
+#elif CFG_sx1276_radio
 	#define RXLORA_RXMODE_RSSI_REG_MODEM_CONFIG2	0x70
 #elif CFG_sx1272_radio
 	#define RXLORA_RXMODE_RSSI_REG_MODEM_CONFIG2	0x74
@@ -249,9 +251,11 @@
 // (initialized by radio_init(), used by radio_rand1())
 static u1_t randbuf[16];
 
-
-#ifdef CFG_sx1276_radio
-	#define LNA_RX_GAIN (0x20 | 0x1)
+#if CFG_RFM98W_radio
+	#warning CFG_RFM98W_radio
+	#define LNA_RX_GAIN (0x20 | 0x01)
+#elif CFG_sx1276_radio
+	#define LNA_RX_GAIN (0x20 | 0x01)
 #elif CFG_sx1272_radio
 	#define LNA_RX_GAIN (0x20 | 0x03)
 #else
@@ -325,8 +329,9 @@ static void opmodeFSK()
 static void configLoraModem ()
 {
 	sf_t sf = getSf(LMIC.rps);
-
-#ifdef CFG_sx1276_radio
+#if CFG_RFM98W_radio
+	#warning CFG_RFM98W_radio
+#elif CFG_sx1276_radio
 	u1_t mc1 = 0, mc2 = 0, mc3 = 0;
 
 	switch (getBw(LMIC.rps))
@@ -415,7 +420,9 @@ static void configChannel ()
 
 static void configPower ()
 {
-#ifdef CFG_sx1276_radio
+#ifdef CFG_RFM98W_radio
+	#warning CFG_RFM98W_radio
+#elif CFG_sx1276_radio
 	// no boost used for now
 	s1_t pw = (s1_t)LMIC.txpow;
 	if (pw >= 17)
@@ -537,7 +544,7 @@ static void txlora ()
 	opmode(OPMODE_TX);
 }
 
-// start transmitter (buf=LMIC.frame, len=LMIC.dataLen)
+// start transmitter (buf = LMIC.frame, len = LMIC.dataLen)
 static void starttx ()
 {
 	ASSERT( (readReg(RegOpMode) & OPMODE_MASK) == OPMODE_SLEEP );
@@ -703,13 +710,16 @@ void radio_init ()
 
 	// some sanity checks, e.g., read version number
 	u1_t v = readReg(RegVersion);
-#ifdef CFG_sx1276_radio
+#ifdef CFG_RFM98W_radio
+	ASSERT(v == 0x12 );
+#elif CFG_sx1276_radio
 	ASSERT(v == 0x12 ); 
 #elif CFG_sx1272_radio
 	ASSERT(v == 0x22);
 #else
 	#error Missing CFG_sx1272_radio/CFG_sx1276_radio
 #endif
+
 	// seed 15-byte randomness via noise rssi
 	rxlora(RXMODE_RSSI);
 	while ( (readReg(RegOpMode) & OPMODE_MASK) != OPMODE_RX ); // continuous rx

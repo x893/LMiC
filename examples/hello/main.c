@@ -15,7 +15,8 @@
 static int cnt = 0;
 
 // log text to USART and toggle LED
-static void initfunc (osjob_t* job) {
+static void initfunc (osjob_t* job)
+{
     // say hello
     DEBUG_STR("Hello World!\r\n");
     // log counter
@@ -27,7 +28,8 @@ static void initfunc (osjob_t* job) {
 }
 
 // application entry point
-void main () {
+void main ()
+{
     osjob_t initjob;
 
     // initialize runtime env

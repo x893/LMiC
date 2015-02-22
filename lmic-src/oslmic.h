@@ -38,7 +38,7 @@ typedef const char*			str_t;
 #define EV(a,b,c) /**/
 #define DO_DEVDB(meth,...) /**/
 #if !CFG_noassert
-	#define ASSERT(cond) if(!(cond)) hal_failed()
+	#define ASSERT(cond) if (!(cond)) hal_failed()
 #else
 	#define ASSERT(cond) /**/
 #endif
@@ -93,7 +93,7 @@ void os_runloop ();
 #endif
 
 #ifndef OSTICKS_PER_SEC
-	#define OSTICKS_PER_SEC 32768
+	#define OSTICKS_PER_SEC		32768
 #elif OSTICKS_PER_SEC < 10000 || OSTICKS_PER_SEC > 64516
 	#error Illegal OSTICKS_PER_SEC - must be in range [10000:64516]. One tick must be 15.5us .. 100us long.
 #endif

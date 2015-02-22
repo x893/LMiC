@@ -16,9 +16,9 @@
 // BEG: Keep in sync with lorabase.hpp
 //
 
-enum _cr_t { CR_4_5=0, CR_4_6, CR_4_7, CR_4_8 };
-enum _sf_t { FSK=0, SF7, SF8, SF9, SF10, SF11, SF12, SFrfu };
-enum _bw_t { BW125=0, BW250, BW500, BWrfu };
+enum _cr_t { CR_4_5 = 0, CR_4_6, CR_4_7, CR_4_8 };
+enum _sf_t { FSK = 0, SF7, SF8, SF9, SF10, SF11, SF12, SFrfu };
+enum _bw_t { BW125 = 0, BW250, BW500, BWrfu };
 typedef u1_t cr_t;
 typedef u1_t sf_t;
 typedef u1_t bw_t;
@@ -27,101 +27,136 @@ typedef u1_t dr_t;
 typedef u2_t rps_t;
 TYPEDEF_xref2rps_t;
 
-enum { ILLEGAL_RPS = 0xFF };
-enum { DR_PAGE_EU868 = 0x00 };
-enum { DR_PAGE_US915 = 0x10 };
+enum { ILLEGAL_RPS		= 0xFF };
+enum { DR_PAGE_EU868	= 0x00 };
+enum { DR_PAGE_US915	= 0x10 };
 
 // Global maximum frame length
-enum { STD_PREAMBLE_LEN  =  8 };
-enum { MAX_LEN_FRAME	 = 64 };
-enum { LEN_DEVNONCE	  =  2 };
-enum { LEN_ARTNONCE	  =  3 };
-enum { LEN_NETID		 =  3 };
-enum { DELAY_JACC1	   =  5 }; // in secs
+enum { STD_PREAMBLE_LEN	=  8 };
+enum { MAX_LEN_FRAME	= 64 };
+enum { LEN_DEVNONCE		=  2 };
+enum { LEN_ARTNONCE		=  3 };
+enum { LEN_NETID		=  3 };
+enum { DELAY_JACC1		=  5 }; // in secs
 enum { DELAY_DNW1		=  1 }; // in secs down window #1
-enum { DELAY_EXTDNW2	 =  1 }; // in secs
-enum { DELAY_JACC2	   =  DELAY_JACC1+(int)DELAY_EXTDNW2 }; // in secs
-enum { DELAY_DNW2		=  DELAY_DNW1 +(int)DELAY_EXTDNW2 }; // in secs down window #1
-enum { BCN_INTV_exp	  = 7 };
-enum { BCN_INTV_sec	  = 1<<BCN_INTV_exp };
-enum { BCN_INTV_ms	   = BCN_INTV_sec*1000L };
-enum { BCN_INTV_us	   = BCN_INTV_ms*1000L };
+enum { DELAY_EXTDNW2	=  1 }; // in secs
+enum { DELAY_JACC2		=  DELAY_JACC1 + (int)DELAY_EXTDNW2 };	// in secs
+enum { DELAY_DNW2		=  DELAY_DNW1 + (int)DELAY_EXTDNW2 };	// in secs down window #1
+enum { BCN_INTV_exp	 	= 7 };
+enum { BCN_INTV_sec	 	= 1 << BCN_INTV_exp };
+enum { BCN_INTV_ms	 	= BCN_INTV_sec * 1000L };
+enum { BCN_INTV_us	 	= BCN_INTV_ms * 1000L };
 enum { BCN_RESERVE_ms	= 2120 };   // space reserved for beacon and NWK management
-enum { BCN_GUARD_ms	  = 3000 };   // end of beacon period to prevent interference with beacon
-enum { BCN_SLOT_SPAN_ms  =   30 };   // 2^12 reception slots a this span
-enum { BCN_WINDOW_ms	 = BCN_INTV_ms-(int)BCN_GUARD_ms-(int)BCN_RESERVE_ms };
+enum { BCN_GUARD_ms		= 3000 };   // end of beacon period to prevent interference with beacon
+enum { BCN_SLOT_SPAN_ms =   30 };   // 2^12 reception slots a this span
+enum { BCN_WINDOW_ms	= BCN_INTV_ms-(int)BCN_GUARD_ms-(int)BCN_RESERVE_ms };
 enum { BCN_RESERVE_us	= 2120000 };
-enum { BCN_GUARD_us	  = 3000000 };
-enum { BCN_SLOT_SPAN_us  =   30000 };
+enum { BCN_GUARD_us		= 3000000 };
+enum { BCN_SLOT_SPAN_us	=   30000 };
 
-#if CFG_eu868 // ==============================================
+#if CFG_eu434 // ==============================================
 
-enum _dr_eu868_t { DR_SF12=0, DR_SF11, DR_SF10, DR_SF9, DR_SF8, DR_SF7, DR_SF7B, DR_FSK, DR_NONE };
-enum { DR_DFLTMIN = DR_SF7 };
-enum { DR_PAGE = DR_PAGE_EU868 };
+	enum _dr_eu868_t { DR_SF12 = 0, DR_SF11, DR_SF10, DR_SF9, DR_SF8, DR_SF7, DR_SF7B, DR_FSK, DR_NONE };
+	enum { DR_DFLTMIN = DR_SF7 };
+	enum { DR_PAGE = DR_PAGE_EU868 };
 
-// Default frequency plan for EU 868MHz ISM band
-// Bands:
-//  g1 :   1%  14dBm  
-//  g2 : 0.1%  14dBm  
-//  g3 :  10%  27dBm  
-//				 freq			 band	 datarates
-enum { EU868_F1 = 868100000,	  // g1   SF7-12 
-	   EU868_F2 = 868300000,	  // g1   SF7-12 FSK SF7/250		 
-	   EU868_F3 = 868500000,	  // g1   SF7-12		 
-	   EU868_F4 = 868850000,	  // g2   SF7-12		 
-	   EU868_F5 = 869050000,	  // g2   SF7-12		 
-	   EU868_F6 = 869525000,	  // g3   SF7-12		 
-	   EU868_J4 = 864100000,	  // g2   SF7-12  used during join
-	   EU868_J5 = 864300000,	  // g2   SF7-12   ditto
-	   EU868_J6 = 864500000,	  // g2   SF7-12   ditto
-};
-enum { EU868_FREQ_MIN = 863000000,
-	   EU868_FREQ_MAX = 870000000 };
+	// Default frequency plan for EU 868MHz ISM band
+	// Bands:
+	//  g1 :   1%  14dBm
+	//  g2 : 0.1%  14dBm
+	//  g3 :  10%  27dBm
+	//				 freq			 band	 datarates
+	enum { EU434_F1 = 434100000,	  // g1   SF7-12 
+		   EU434_F2 = 434300000,	  // g1   SF7-12 FSK SF7/250		 
+		   EU434_F3 = 434500000,	  // g1   SF7-12		 
+		   EU434_F4 = 434850000,	  // g2   SF7-12		 
+		   EU434_F5 = 435050000,	  // g2   SF7-12		 
+		   EU434_F6 = 435525000,	  // g3   SF7-12		 
+		   EU434_J4 = 433100000,	  // g2   SF7-12  used during join
+		   EU434_J5 = 433300000,	  // g2   SF7-12   ditto
+		   EU434_J6 = 433500000,	  // g2   SF7-12   ditto
+	};
+	enum { EU434_FREQ_MIN = 433000000,
+		   EU434_FREQ_MAX = 434000000 };
 
-enum { CHNL_PING		 = 5 };
-enum { FREQ_PING		 = EU868_F6 };  // default ping freq
-enum { DR_PING		   = SF9 };	   // default ping DR
-enum { CHNL_DNW2		 = 5 };
-enum { FREQ_DNW2		 = EU868_F6 };
-enum { DR_DNW2		   = DR_SF9 };
-enum { CHNL_BCN		  = 5 };
-enum { FREQ_BCN		  = EU868_F6 };
-enum { DR_BCN			= DR_SF9 };
-enum { AIRTIME_BCN	   = 185344 };  // micros
+	enum { CHNL_PING		= 5 };
+	enum { FREQ_PING		= EU434_F6 };  // default ping freq
+	enum { DR_PING			= SF9 };	   // default ping DR
+	enum { CHNL_DNW2		= 5 };
+	enum { FREQ_DNW2		= EU434_F6 };
+	enum { DR_DNW2			= DR_SF9 };
+	enum { CHNL_BCN			= 5 };
+	enum { FREQ_BCN			= EU434_F6 };
+	enum { DR_BCN			= DR_SF9 };
+	enum { AIRTIME_BCN		= 370688 };  // micros
+
+#elif CFG_eu868 // ==============================================
+
+	enum _dr_eu868_t { DR_SF12 = 0, DR_SF11, DR_SF10, DR_SF9, DR_SF8, DR_SF7, DR_SF7B, DR_FSK, DR_NONE };
+	enum { DR_DFLTMIN = DR_SF7 };
+	enum { DR_PAGE = DR_PAGE_EU868 };
+
+	// Default frequency plan for EU 868MHz ISM band
+	// Bands:
+	//  g1 :   1%  14dBm  
+	//  g2 : 0.1%  14dBm  
+	//  g3 :  10%  27dBm  
+	//				 freq			 band	 datarates
+	enum { EU868_F1 = 868100000,	  // g1   SF7-12 
+		   EU868_F2 = 868300000,	  // g1   SF7-12 FSK SF7/250		 
+		   EU868_F3 = 868500000,	  // g1   SF7-12		 
+		   EU868_F4 = 868850000,	  // g2   SF7-12		 
+		   EU868_F5 = 869050000,	  // g2   SF7-12		 
+		   EU868_F6 = 869525000,	  // g3   SF7-12		 
+		   EU868_J4 = 864100000,	  // g2   SF7-12  used during join
+		   EU868_J5 = 864300000,	  // g2   SF7-12   ditto
+		   EU868_J6 = 864500000,	  // g2   SF7-12   ditto
+	};
+	enum { EU868_FREQ_MIN = 863000000,
+		   EU868_FREQ_MAX = 870000000 };
+
+	enum { CHNL_PING		= 5 };
+	enum { FREQ_PING		= EU868_F6 };  // default ping freq
+	enum { DR_PING			= SF9 };	   // default ping DR
+	enum { CHNL_DNW2		= 5 };
+	enum { FREQ_DNW2		= EU868_F6 };
+	enum { DR_DNW2			= DR_SF9 };
+	enum { CHNL_BCN			= 5 };
+	enum { FREQ_BCN			= EU868_F6 };
+	enum { DR_BCN			= DR_SF9 };
+	enum { AIRTIME_BCN		= 185344 };  // micros
 
 #elif CFG_us915  // =========================================
 
-enum _dr_us915_t { DR_SF10=0, DR_SF9, DR_SF8, DR_SF7, DR_SF8C, DR_NONE,
-		   // Devices behind a router:
-		   DR_SF12CR=8, DR_SF11CR, DR_SF10CR, DR_SF9CR, DR_SF8CR, DR_SF7CR };
-enum { DR_DFLTMIN = DR_SF8C };
-enum { DR_PAGE = DR_PAGE_US915 };
+	enum _dr_us915_t { DR_SF10=0, DR_SF9, DR_SF8, DR_SF7, DR_SF8C, DR_NONE,
+			   // Devices behind a router:
+			   DR_SF12CR = 8, DR_SF11CR, DR_SF10CR, DR_SF9CR, DR_SF8CR, DR_SF7CR };
+	enum { DR_DFLTMIN = DR_SF8C };
+	enum { DR_PAGE = DR_PAGE_US915 };
 
-// Default frequency plan for US 915MHz
-enum { US915_125kHz_UPFBASE = 902300000,
-	   US915_125kHz_UPFSTEP =	200000,
-	   US915_500kHz_UPFBASE = 903000000,
-	   US915_500kHz_UPFSTEP =   1600000,
-	   US915_500kHz_DNFBASE = 923300000,
-	   US915_500kHz_DNFSTEP =	600000
-};
-enum { US915_FREQ_MIN = 902000000,
-	   US915_FREQ_MAX = 928000000 };
+	// Default frequency plan for US 915MHz
+	enum { US915_125kHz_UPFBASE = 902300000,
+		   US915_125kHz_UPFSTEP = 200000,
+		   US915_500kHz_UPFBASE = 903000000,
+		   US915_500kHz_UPFSTEP = 1600000,
+		   US915_500kHz_DNFBASE = 923300000,
+		   US915_500kHz_DNFSTEP = 600000
+	};
+	enum { US915_FREQ_MIN = 902000000,
+		   US915_FREQ_MAX = 928000000 };
 
-enum { CHNL_PING		 = 2 };
-enum { FREQ_PING		 = US915_500kHz_DNFBASE + CHNL_PING*US915_500kHz_DNFSTEP };  // default ping freq
-enum { DR_PING		   = DR_SF10CR };	   // default ping DR
-enum { CHNL_DNW2		 = 1 };
-enum { FREQ_DNW2		 = US915_500kHz_DNFBASE + CHNL_DNW2*US915_500kHz_DNFSTEP };
-enum { DR_DNW2		   = DR_SF10CR };
-enum { CHNL_BCN		  = 0 };
-enum { FREQ_BCN		  = US915_500kHz_DNFBASE + CHNL_BCN*US915_500kHz_DNFSTEP };
-enum { DR_BCN			= DR_SF10CR };
-enum { AIRTIME_BCN	   = 82432 };  // micros
+	enum { CHNL_PING		= 2 };
+	enum { FREQ_PING		= US915_500kHz_DNFBASE + CHNL_PING*US915_500kHz_DNFSTEP };  // default ping freq
+	enum { DR_PING			= DR_SF10CR };	   // default ping DR
+	enum { CHNL_DNW2		= 1 };
+	enum { FREQ_DNW2		= US915_500kHz_DNFBASE + CHNL_DNW2*US915_500kHz_DNFSTEP };
+	enum { DR_DNW2			= DR_SF10CR };
+	enum { CHNL_BCN			= 0 };
+	enum { FREQ_BCN			= US915_500kHz_DNFBASE + CHNL_BCN*US915_500kHz_DNFSTEP };
+	enum { DR_BCN			= DR_SF10CR };
+	enum { AIRTIME_BCN		= 82432 };  // micros
 
 #endif // ===================================================
-
 
 enum {
 	// Beacon frame format
@@ -274,34 +309,50 @@ enum {
 	MCMD_LADR_POW_MASK   = 0x0F,
 	MCMD_LADR_DR_SHIFT   = 4,
 	MCMD_LADR_POW_SHIFT  = 0,
-#if CFG_eu868
-	MCMD_LADR_SF12	  = DR_SF12<<4,
-	MCMD_LADR_SF11	  = DR_SF11<<4,
-	MCMD_LADR_SF10	  = DR_SF10<<4,
-	MCMD_LADR_SF9	   = DR_SF9 <<4,
-	MCMD_LADR_SF8	   = DR_SF8 <<4,
-	MCMD_LADR_SF7	   = DR_SF7 <<4,
-	MCMD_LADR_SF7B	  = DR_SF7B<<4,
-	MCMD_LADR_FSK	   = DR_FSK <<4,
+#if CFG_eu434
+	MCMD_LADR_SF12		= DR_SF12 << 4,
+	MCMD_LADR_SF11		= DR_SF11 << 4,
+	MCMD_LADR_SF10		= DR_SF10 << 4,
+	MCMD_LADR_SF9		= DR_SF9  << 4,
+	MCMD_LADR_SF8		= DR_SF8  << 4,
+	MCMD_LADR_SF7		= DR_SF7  << 4,
+	MCMD_LADR_SF7B		= DR_SF7B << 4,
+	MCMD_LADR_FSK		= DR_FSK  << 4,
 
-	MCMD_LADR_20dBm	 = 0,
-	MCMD_LADR_14dBm	 = 1,
-	MCMD_LADR_11dBm	 = 2,
-	MCMD_LADR_8dBm	  = 3,
-	MCMD_LADR_5dBm	  = 4,
-	MCMD_LADR_2dBm	  = 5,
+	MCMD_LADR_20dBm		= 0,
+	MCMD_LADR_14dBm		= 1,
+	MCMD_LADR_11dBm		= 2,
+	MCMD_LADR_8dBm		= 3,
+	MCMD_LADR_5dBm		= 4,
+	MCMD_LADR_2dBm		= 5,
+#elif CFG_eu868
+	MCMD_LADR_SF12		= DR_SF12 << 4,
+	MCMD_LADR_SF11		= DR_SF11 << 4,
+	MCMD_LADR_SF10		= DR_SF10 << 4,
+	MCMD_LADR_SF9		= DR_SF9  << 4,
+	MCMD_LADR_SF8		= DR_SF8  << 4,
+	MCMD_LADR_SF7		= DR_SF7  << 4,
+	MCMD_LADR_SF7B		= DR_SF7B << 4,
+	MCMD_LADR_FSK		= DR_FSK  << 4,
+
+	MCMD_LADR_20dBm		= 0,
+	MCMD_LADR_14dBm		= 1,
+	MCMD_LADR_11dBm		= 2,
+	MCMD_LADR_8dBm		= 3,
+	MCMD_LADR_5dBm		= 4,
+	MCMD_LADR_2dBm		= 5,
 #elif CFG_us915
-	MCMD_LADR_SF10	  = DR_SF10<<4,
-	MCMD_LADR_SF9	   = DR_SF9 <<4,
-	MCMD_LADR_SF8	   = DR_SF8 <<4,
-	MCMD_LADR_SF7	   = DR_SF7 <<4,
-	MCMD_LADR_SF8C	  = DR_SF8C<<4,
-	MCMD_LADR_SF12CR	= DR_SF12CR<<4,
-	MCMD_LADR_SF11CR	= DR_SF11CR<<4,
-	MCMD_LADR_SF10CR	= DR_SF10CR<<4,
-	MCMD_LADR_SF9CR	 = DR_SF9CR<<4,
-	MCMD_LADR_SF8CR	 = DR_SF8CR<<4,
-	MCMD_LADR_SF7CR	 = DR_SF7CR<<4,
+	MCMD_LADR_SF10		= DR_SF10 << 4,
+	MCMD_LADR_SF9		= DR_SF9  << 4,
+	MCMD_LADR_SF8		= DR_SF8  << 4,
+	MCMD_LADR_SF7		= DR_SF7  << 4,
+	MCMD_LADR_SF8C		= DR_SF8C << 4,
+	MCMD_LADR_SF12CR	= DR_SF12CR << 4,
+	MCMD_LADR_SF11CR	= DR_SF11CR << 4,
+	MCMD_LADR_SF10CR	= DR_SF10CR << 4,
+	MCMD_LADR_SF9CR		= DR_SF9CR << 4,
+	MCMD_LADR_SF8CR		= DR_SF8CR << 4,
+	MCMD_LADR_SF7CR		= DR_SF7CR << 4,
 
 	MCMD_LADR_30dBm	 = 0,
 	MCMD_LADR_28dBm	 = 1,
@@ -322,24 +373,24 @@ typedef u4_t devaddr_t;
 
 
 // RX quality (device)
-enum { RSSI_OFF=64, SNR_SCALEUP=4 };
+enum { RSSI_OFF = 64, SNR_SCALEUP = 4 };
 struct rxqu_t {
 	s1_t rssi;	// offset by RSSI_OFF, max physical RSSI range -198..+63
-	s1_t snr;	 // scaled by SNR_SCALEUP, max physical SNR range -32..+31.75
+	s1_t snr;	// scaled by SNR_SCALEUP, max physical SNR range -32..+31.75
 };
 TYPEDEF_xref2rxqu_t;
 
 
-inline sf_t  getSf   (rps_t params)			{ return   (sf_t)(params &  0x7); }
-inline rps_t setSf   (rps_t params, sf_t sf)   { return (rps_t)((params & ~0x7) | sf); }
-inline bw_t  getBw   (rps_t params)			{ return  (bw_t)((params >> 3) & 0x3); }
-inline rps_t setBw   (rps_t params, bw_t cr)   { return (rps_t)((params & ~0x18) | (cr<<3)); }
-inline cr_t  getCr   (rps_t params)			{ return  (cr_t)((params >> 5) & 0x3); }
-inline rps_t setCr   (rps_t params, cr_t cr)   { return (rps_t)((params & ~0x60) | (cr<<5)); }
-inline int   getNocrc(rps_t params)			{ return		((params >> 7) & 0x1); }
-inline rps_t setNocrc(rps_t params, int nocrc) { return (rps_t)((params & ~0x80) | (nocrc<<7)); }
-inline int   getIh   (rps_t params)			{ return		((params >> 8) & 0xFF); }
-inline rps_t setIh   (rps_t params, int ih)	{ return (rps_t)((params & ~0xFF00) | (ih<<8)); }
+inline sf_t  getSf   (rps_t params)				{ return (sf_t)(params &  0x7); }
+inline rps_t setSf   (rps_t params, sf_t sf)	{ return (rps_t)((params & ~0x7) | sf); }
+inline bw_t  getBw   (rps_t params)				{ return (bw_t)((params >> 3) & 0x3); }
+inline rps_t setBw   (rps_t params, bw_t cr)	{ return (rps_t)((params & ~0x18) | (cr << 3)); }
+inline cr_t  getCr   (rps_t params)				{ return (cr_t)((params >> 5) & 0x3); }
+inline rps_t setCr   (rps_t params, cr_t cr)	{ return (rps_t)((params & ~0x60) | (cr << 5)); }
+inline int   getNocrc(rps_t params)				{ return		((params >> 7) & 0x1); }
+inline rps_t setNocrc(rps_t params, int nocrc)	{ return (rps_t)((params & ~0x80) | (nocrc << 7)); }
+inline int   getIh   (rps_t params)				{ return		((params >> 8) & 0xFF); }
+inline rps_t setIh   (rps_t params, int ih)		{ return (rps_t)((params & ~0xFF00) | (ih << 8)); }
 inline rps_t makeRps (sf_t sf, bw_t bw, cr_t cr, int ih, int nocrc) {
 	return sf | (bw<<3) | (cr<<5) | (nocrc?(1<<7):0) | ((ih&0xFF)<<8);
 }
@@ -348,15 +399,15 @@ inline rps_t makeRps (sf_t sf, bw_t bw, cr_t cr, int ih, int nocrc) {
 inline int sameSfBw(rps_t r1, rps_t r2) { return ((r1^r2)&0x1F) == 0; }
 
 extern const u1_t _DR2RPS_CRC[];
-inline rps_t updr2rps (dr_t dr) { return (rps_t)_DR2RPS_CRC[dr+1]; }
-inline rps_t dndr2rps (dr_t dr) { return setNocrc(updr2rps(dr),1); }
+inline rps_t updr2rps (dr_t dr) { return (rps_t)_DR2RPS_CRC[dr + 1]; }
+inline rps_t dndr2rps (dr_t dr) { return setNocrc(updr2rps(dr), 1); }
 inline int isFasterDR (dr_t dr1, dr_t dr2) { return dr1 > dr2; }
 inline int isSlowerDR (dr_t dr1, dr_t dr2) { return dr1 < dr2; }
-inline dr_t  incDR	(dr_t dr) { return _DR2RPS_CRC[dr+2]==ILLEGAL_RPS ? dr : (dr_t)(dr+1); } // increase data rate
-inline dr_t  decDR	(dr_t dr) { return _DR2RPS_CRC[dr  ]==ILLEGAL_RPS ? dr : (dr_t)(dr-1); } // decrease data rate
-inline dr_t  assertDR (dr_t dr) { return _DR2RPS_CRC[dr+1]==ILLEGAL_RPS ? DR_DFLTMIN : dr; }   // force into a valid DR
-inline bit_t validDR  (dr_t dr) { return _DR2RPS_CRC[dr+1]!=ILLEGAL_RPS; } // in range
-inline dr_t  lowerDR  (dr_t dr, u1_t n) { while(n--){dr=decDR(dr);} return dr; } // decrease data rate by n steps
+inline dr_t  incDR	(dr_t dr) { return _DR2RPS_CRC[dr+2] == ILLEGAL_RPS ? dr : (dr_t)(dr + 1); } // increase data rate
+inline dr_t  decDR	(dr_t dr) { return _DR2RPS_CRC[dr  ] == ILLEGAL_RPS ? dr : (dr_t)(dr - 1); } // decrease data rate
+inline dr_t  assertDR (dr_t dr) { return _DR2RPS_CRC[dr+1] == ILLEGAL_RPS ? DR_DFLTMIN : dr; }   // force into a valid DR
+inline bit_t validDR  (dr_t dr) { return _DR2RPS_CRC[dr+1] != ILLEGAL_RPS; } // in range
+inline dr_t  lowerDR  (dr_t dr, u1_t n) { while (n--){ dr = decDR(dr); } return dr; } // decrease data rate by n steps
 
 //
 // BEG: Keep in sync with lorabase.hpp

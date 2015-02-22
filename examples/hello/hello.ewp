@@ -39,20 +39,20 @@
         <option>
           <name>Input variant</name>
           <version>3</version>
-          <state>0</state>
+          <state>7</state>
         </option>
         <option>
           <name>Input description</name>
-          <state>Automatic choice of formatter.</state>
+          <state>No specifier n, no float nor long long, no scan set, no assignment suppressing, without multibyte support.</state>
         </option>
         <option>
           <name>Output variant</name>
           <version>2</version>
-          <state>0</state>
+          <state>6</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>Automatic choice of formatter.</state>
+          <state>No specifier a, A, no specifier n, no float nor long long, without multibyte support.</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -87,7 +87,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.50.1.4445</state>
+          <state>6.50.3.4744</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -103,7 +103,7 @@
         </option>
         <option>
           <name>GenLowLevelInterface</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GEndianModeBE</name>
@@ -115,7 +115,7 @@
         </option>
         <option>
           <name>GenStdoutInterface</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GeneralMisraRules98</name>
@@ -165,10 +165,11 @@
         <option>
           <name>CCDefines</name>
           <state>STM32L1XX_MD</state>
-          <state>CFG_eu868</state>
+          <state>CFG_eu434</state>
           <state>CFG_DEBUG</state>
-          <state>CFG_wimod_board</state>
-          <state>CFG_sx1272_radio</state>
+          <state>CFG_x893_board</state>
+          <state>CFG_RFM98W_radio</state>
+          <state>CFG_assert</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -585,7 +586,7 @@
         </option>
         <option>
           <name>OOCObjCopyEnable</name>
-          <state>1</state>
+          <state>0</state>
         </option>
       </data>
     </settings>
