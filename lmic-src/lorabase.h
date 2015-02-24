@@ -16,19 +16,23 @@
 // BEG: Keep in sync with lorabase.hpp
 //
 
+#include "oslmic.h"
+
 enum _cr_t { CR_4_5 = 0, CR_4_6, CR_4_7, CR_4_8 };
 enum _sf_t { FSK = 0, SF7, SF8, SF9, SF10, SF11, SF12, SFrfu };
 enum _bw_t { BW125 = 0, BW250, BW500, BWrfu };
-typedef u1_t cr_t;
-typedef u1_t sf_t;
-typedef u1_t bw_t;
-typedef u1_t dr_t;
+
+typedef uint8_t cr_t;
+typedef uint8_t sf_t;
+typedef uint8_t bw_t;
+typedef uint8_t dr_t;
 // Radio parameter set (encodes SF/BW/CR/IH/NOCRC)
-typedef u2_t rps_t;
+typedef uint16_t rps_t;
 TYPEDEF_xref2rps_t;
 
 enum { ILLEGAL_RPS		= 0xFF };
 enum { DR_PAGE_EU868	= 0x00 };
+enum { DR_PAGE_EU434	= 0x20 };
 enum { DR_PAGE_US915	= 0x10 };
 
 // Global maximum frame length
@@ -58,7 +62,7 @@ enum { BCN_SLOT_SPAN_us	=   30000 };
 
 	enum _dr_eu868_t { DR_SF12 = 0, DR_SF11, DR_SF10, DR_SF9, DR_SF8, DR_SF7, DR_SF7B, DR_FSK, DR_NONE };
 	enum { DR_DFLTMIN = DR_SF7 };
-	enum { DR_PAGE = DR_PAGE_EU868 };
+	enum { DR_PAGE = DR_PAGE_EU434 };
 
 	// Default frequency plan for EU 868MHz ISM band
 	// Bands:
@@ -195,18 +199,18 @@ enum {
 };
 enum {
 	// Data frame format
-	OFF_DAT_HDR	  = 0,
-	OFF_DAT_ADDR	 = 1,
-	OFF_DAT_FCT	  = 5,
+	OFF_DAT_HDR		= 0,
+	OFF_DAT_ADDR	= 1,
+	OFF_DAT_FCT		= 5,
 	OFF_DAT_SEQNO	= 6,
-	OFF_DAT_OPTS	 = 8,
+	OFF_DAT_OPTS	= 8,
 };
 enum { MAX_LEN_PAYLOAD = MAX_LEN_FRAME-(int)OFF_DAT_OPTS-4 };
 enum {
 	// Bitfields in frame format octet
-	HDR_FTYPE   = 0xE0,
-	HDR_RFU	 = 0x1C,
-	HDR_MAJOR   = 0x03
+	HDR_FTYPE	= 0xE0,
+	HDR_RFU		= 0x1C,
+	HDR_MAJOR	= 0x03
 };
 enum { HDR_FTYPE_DNFLAG = 0x20 };  // flags DN frame except for HDR_FTYPE_PROP
 enum {
@@ -225,15 +229,15 @@ enum {
 };
 enum {
 	// Bitfields in frame control octet
-	FCT_ADREN  = 0x80,
-	FCT_ADRARQ = 0x40,
-	FCT_ACK	= 0x20,
-	FCT_MORE   = 0x10,
-	FCT_OPTLEN = 0x0F,
+	FCT_ADREN	= 0x80,
+	FCT_ADRARQ	= 0x40,
+	FCT_ACK		= 0x20,
+	FCT_MORE	= 0x10,
+	FCT_OPTLEN	= 0x0F,
 };
 enum {
-	NWKID_MASK = 0xFE000000,
-	NWKID_BITS = 7
+	NWKID_MASK = (int)0xFE000000,
+	NWKID_BITS = 7,
 };
 
 // MAC uplink commands   downwlink too
@@ -369,14 +373,14 @@ enum {
 };
 
 // Device address
-typedef u4_t devaddr_t;
+typedef uint32_t devaddr_t;
 
 
 // RX quality (device)
 enum { RSSI_OFF = 64, SNR_SCALEUP = 4 };
 struct rxqu_t {
-	s1_t rssi;	// offset by RSSI_OFF, max physical RSSI range -198..+63
-	s1_t snr;	// scaled by SNR_SCALEUP, max physical SNR range -32..+31.75
+	int8_t rssi;	// offset by RSSI_OFF, max physical RSSI range -198..+63
+	int8_t snr;	// scaled by SNR_SCALEUP, max physical SNR range -32..+31.75
 };
 TYPEDEF_xref2rxqu_t;
 
@@ -398,7 +402,7 @@ inline rps_t makeRps (sf_t sf, bw_t bw, cr_t cr, int ih, int nocrc) {
 // Two frames with params r1/r2 would interfere on air: same SFx + BWx 
 inline int sameSfBw(rps_t r1, rps_t r2) { return ((r1^r2)&0x1F) == 0; }
 
-extern const u1_t _DR2RPS_CRC[];
+extern const uint8_t _DR2RPS_CRC[];
 inline rps_t updr2rps (dr_t dr) { return (rps_t)_DR2RPS_CRC[dr + 1]; }
 inline rps_t dndr2rps (dr_t dr) { return setNocrc(updr2rps(dr), 1); }
 inline int isFasterDR (dr_t dr1, dr_t dr2) { return dr1 > dr2; }
@@ -406,8 +410,8 @@ inline int isSlowerDR (dr_t dr1, dr_t dr2) { return dr1 < dr2; }
 inline dr_t  incDR	(dr_t dr) { return _DR2RPS_CRC[dr+2] == ILLEGAL_RPS ? dr : (dr_t)(dr + 1); } // increase data rate
 inline dr_t  decDR	(dr_t dr) { return _DR2RPS_CRC[dr  ] == ILLEGAL_RPS ? dr : (dr_t)(dr - 1); } // decrease data rate
 inline dr_t  assertDR (dr_t dr) { return _DR2RPS_CRC[dr+1] == ILLEGAL_RPS ? DR_DFLTMIN : dr; }   // force into a valid DR
-inline bit_t validDR  (dr_t dr) { return _DR2RPS_CRC[dr+1] != ILLEGAL_RPS; } // in range
-inline dr_t  lowerDR  (dr_t dr, u1_t n) { while (n--){ dr = decDR(dr); } return dr; } // decrease data rate by n steps
+inline uint8_t validDR  (dr_t dr) { return _DR2RPS_CRC[dr+1] != ILLEGAL_RPS; } // in range
+inline dr_t  lowerDR  (dr_t dr, uint8_t n) { while (n--){ dr = decDR(dr); } return dr; } // decrease data rate by n steps
 
 //
 // BEG: Keep in sync with lorabase.hpp
@@ -415,9 +419,9 @@ inline dr_t  lowerDR  (dr_t dr, u1_t n) { while (n--){ dr = decDR(dr); } return 
 
 
 // Convert between dBm values and power codes (MCMD_LADR_XdBm)
-s1_t pow2dBm (u1_t mcmd_ladr_p1);
+int8_t pow2dBm (uint8_t mcmd_ladr_p1);
 // Calculate airtime
-ostime_t calcAirTime (rps_t rps, u1_t plen);
+ostime_t calcAirTime (rps_t rps, uint8_t plen);
 // Sensitivity at given SF/BW
 int getSensitivity (rps_t rps);
 

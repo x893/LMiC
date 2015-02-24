@@ -6,19 +6,6 @@
   <configuration>
     <name>Debug</name>
     <outputs>
-      <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
-      <file>$PROJ_DIR$\Debug\Obj\aes.pbi</file>
-      <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
-      <file>$PROJ_DIR$\Debug\Exe\interrupt.hex</file>
-      <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\main.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\app.o</file>
-      <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
-      <file>$TOOLKIT_DIR$\CMSIS\Include\core_cm3.h</file>
-      <file>$PROJ_DIR$\app.c</file>
-      <file>$PROJ_DIR$\Debug\Obj\hal-stm32.pbi</file>
-      <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
-      <file>$TOOLKIT_DIR$\config\linker\ST\stm32l151xB.icf</file>
       <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\hal-stm32.c</file>
       <file>$PROJ_DIR$\..\..\lmic-src\hal.h</file>
       <file>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\startup_stm32l1xx_md.s</file>
@@ -34,12 +21,25 @@
       <file>$PROJ_DIR$\..\..\lmic-src\radio.c</file>
       <file>$PROJ_DIR$\sensor.c</file>
       <file>$PROJ_DIR$\main.c</file>
-      <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+      <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
+      <file>$PROJ_DIR$\Debug\Exe\interrupt.hex</file>
+      <file>$PROJ_DIR$\Debug\Obj\app.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\aes.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.o</file>
+      <file>$TOOLKIT_DIR$\CMSIS\Include\core_cm3.h</file>
+      <file>$PROJ_DIR$\app.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\hal-stm32.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
       <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+      <file>$TOOLKIT_DIR$\config\linker\ST\stm32l151xB.icf</file>
       <file>$TOOLKIT_DIR$\CMSIS\Include\core_cmFunc.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\sensor.o</file>
-      <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
       <file>$TOOLKIT_DIR$\CMSIS\Include\core_cmInstr.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\sensor.o</file>
       <file>$TOOLKIT_DIR$\inc\c\string.h</file>
       <file>$PROJ_DIR$\Debug\Obj\radio.pbi</file>
       <file>$PROJ_DIR$\gpio.c</file>
@@ -52,19 +52,19 @@
       <file>$TOOLKIT_DIR$\inc\c\DLib_Threads.h</file>
       <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
       <file>$PROJ_DIR$\Debug\Exe\interrupt.out</file>
-      <file>$PROJ_DIR$\Debug\Obj\oslmic.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\app.pbi</file>
       <file>$PROJ_DIR$\Debug\Obj\hal-stm32.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\lmic.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\app.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\oslmic.o</file>
       <file>$PROJ_DIR$\Debug\Obj\system_stm32l1xx.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\gpio.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\lmic.pbi</file>
       <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
-      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\gpio.pbi</file>
       <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\aes.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\lmic.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\startup_stm32l1xx_md.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
       <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\aes.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\startup_stm32l1xx_md.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\lmic.o</file>
       <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
       <file>$PROJ_DIR$\..\main.c</file>
       <file>$TOOLKIT_DIR$\inc\c\xencoding_limits.h</file>
@@ -80,48 +80,25 @@
       </outputs>
     </file>
     <file>
-      <name>$PROJ_DIR$\app.c</name>
-      <outputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 6</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 47</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICCARM</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\hal-stm32.c</name>
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 48</file>
+          <file> 46</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 10</file>
+          <file> 25</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22 16 8 4 33 44 38 30 18</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9 3 23 19 31 44 38 30 5</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22 16 8 4 33 44 38 30 18</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9 3 23 19 31 44 38 30 5</file>
         </tool>
       </inputs>
     </file>
@@ -139,7 +116,7 @@
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 50</file>
+          <file> 49</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -149,11 +126,11 @@
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 16 8 4 32 11 54 7 28 61 43 33 44 38 30 18</file>
+          <file> 3 23 19 32 26 53 18 28 61 43 31 44 38 30 5</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 16 8 4 32 11 54 7 28 61 43 33 44 38 30 18</file>
+          <file> 3 23 19 32 26 53 18 28 61 43 31 44 38 30 5</file>
         </tool>
       </inputs>
     </file>
@@ -162,21 +139,21 @@
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 55</file>
+          <file> 56</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 1</file>
+          <file> 20</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 24 34 32 11 54 7 28 61 43 58 2 14</file>
+          <file> 11 34 32 26 53 18 28 61 43 55 21 1</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 24 34 32 11 54 7 28 61 43 58 2 14</file>
+          <file> 11 34 32 26 53 18 28 61 43 55 21 1</file>
         </tool>
       </inputs>
     </file>
@@ -185,21 +162,21 @@
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 56</file>
+          <file> 58</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 49</file>
+          <file> 50</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
         </tool>
       </inputs>
     </file>
@@ -208,7 +185,7 @@
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 46</file>
+          <file> 48</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -218,11 +195,11 @@
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
         </tool>
       </inputs>
     </file>
@@ -241,11 +218,11 @@
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
         </tool>
       </inputs>
     </file>
@@ -254,7 +231,7 @@
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 31</file>
+          <file> 33</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -264,11 +241,11 @@
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22 16 8 4 33 44 38 30 18</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9 3 23 19 31 44 38 30 5</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22 16 8 4 33 44 38 30 18</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9 3 23 19 31 44 38 30 5</file>
         </tool>
       </inputs>
     </file>
@@ -277,21 +254,44 @@
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 5</file>
+          <file> 22</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 53</file>
+          <file> 54</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\app.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 17</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 47</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
         </tool>
       </inputs>
     </file>
@@ -304,17 +304,17 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 51</file>
+          <file> 52</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22 16 8 4 33 44 38 30 18</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9 3 23 19 31 44 38 30 5</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22 16 8 4 33 44 38 30 18</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9 3 23 19 31 44 38 30 5</file>
         </tool>
       </inputs>
     </file>
@@ -327,13 +327,13 @@
         </tool>
         <tool>
           <name>OBJCOPY</name>
-          <file> 3</file>
+          <file> 16</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ILINK</name>
-          <file> 12 55 48 56 5 46 62 31 57 50 0 59 29 52</file>
+          <file> 29 56 46 58 22 48 62 33 57 49 15 59 27 51</file>
         </tool>
       </inputs>
     </file>
@@ -342,21 +342,21 @@
       <outputs>
         <tool>
           <name>ICCARM</name>
-          <file> 5</file>
+          <file> 22</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 53</file>
+          <file> 54</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 21 24 34 32 11 54 7 28 61 43 58 2 14 22</file>
+          <file> 8 11 34 32 26 53 18 28 61 43 55 21 1 9</file>
         </tool>
       </inputs>
     </file>

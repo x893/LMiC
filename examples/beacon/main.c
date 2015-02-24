@@ -16,32 +16,32 @@
 //////////////////////////////////////////////////
 
 // application router ID (LSBF)
-static const u1_t APPEUI[8]  = { 0x02, 0x00, 0x00, 0x00, 0x00, 0xEE, 0xFF, 0xC0 };
+static const uint8_t APPEUI[8]  = { 0x02, 0x00, 0x00, 0x00, 0x00, 0xEE, 0xFF, 0xC0 };
 
 // unique device ID (LSBF)
-static const u1_t DEVEUI[8]  = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF };
+static const uint8_t DEVEUI[8]  = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF };
 
 // device-specific AES key (derived from device EUI)
-static const u1_t DEVKEY[16] = { 0xAB, 0x89, 0xEF, 0xCD, 0x23, 0x01, 0x67, 0x45, 0x54, 0x76, 0x10, 0x32, 0xDC, 0xFE, 0x98, 0xBA };
+static const uint8_t DEVKEY[16] = { 0xAB, 0x89, 0xEF, 0xCD, 0x23, 0x01, 0x67, 0x45, 0x54, 0x76, 0x10, 0x32, 0xDC, 0xFE, 0x98, 0xBA };
 
 //////////////////////////////////////////////////
 // APPLICATION CALLBACKS
 //////////////////////////////////////////////////
 
 // provide application router ID (8 bytes, LSBF)
-void os_getArtEui (u1_t* buf)
+void os_getArtEui (uint8_t* buf)
 {
 	memcpy(buf, APPEUI, 8);
 }
 
 // provide device ID (8 bytes, LSBF)
-void os_getDevEui (u1_t* buf)
+void os_getDevEui (uint8_t* buf)
 {
 	memcpy(buf, DEVEUI, 8);
 }
 
 // provide device key (16 bytes)
-void os_getDevKey (u1_t* buf)
+void os_getDevKey (uint8_t* buf)
 {
 	memcpy(buf, DEVKEY, 16);
 }
@@ -52,7 +52,8 @@ void os_getDevKey (u1_t* buf)
 //////////////////////////////////////////////////
 
 // initial job
-static void initfunc (osjob_t* j) {
+static void initfunc (osjob_t* j)
+{
 	// reset MAC state
 	LMIC_reset();
 	// start joining
@@ -60,9 +61,8 @@ static void initfunc (osjob_t* j) {
 	// init done - onEvent() callback will be invoked...
 }
 
-
 // application entry point
-void main ()
+int main ()
 {
 	osjob_t initjob;
 
@@ -109,6 +109,8 @@ void onEvent (ev_t ev)
 	case EV_BEACON_MISSED:
 		// switch LEN off
 		DEBUG_LED(0);
+		break;
+	default:
 		break;
 	}
 }

@@ -35,8 +35,8 @@ DECL_ON_LMIC_EVENT;
 
 
 // Fwd decls.
-static void engineUpdate();
-static void startScan ();
+static void engineUpdate(void);
+static void startScan (void);
 
 
 // ================================================================================
@@ -44,109 +44,109 @@ static void startScan ();
 
 #if !HAS_os_calls
 
-#ifndef os_rlsbf2
-u2_t os_rlsbf2 (xref2cu1_t buf)
-{
-	return (u2_t)(buf[0] | (buf[1] << 8));
-}
-#endif
-
-#ifndef os_rlsbf4
-u4_t os_rlsbf4 (xref2cu1_t buf)
-{
-	return (u4_t)(buf[0] | (buf[1] << 8) | ((u4_t)buf[2] << 16) | ((u4_t)buf[3] << 24));
-}
-#endif
-
-
-#ifndef os_rmsbf4
-u4_t os_rmsbf4 (xref2cu1_t buf)
-{
-	return (u4_t)(buf[3] | (buf[2] << 8) | ((u4_t)buf[1] << 16) | ((u4_t)buf[0] << 24));
-}
-#endif
-
-
-#ifndef os_wlsbf2
-void os_wlsbf2 (xref2u1_t buf, u2_t v)
-{
-	buf[0] = v;
-	buf[1] = v >> 8;
-}
-#endif
-
-#ifndef os_wlsbf4
-void os_wlsbf4 (xref2u1_t buf, u4_t v)
-{
-	buf[0] = v;
-	buf[1] = v >>  8;
-	buf[2] = v >> 16;
-	buf[3] = v >> 24;
-}
-#endif
-
-#ifndef os_wmsbf4
-void os_wmsbf4 (xref2u1_t buf, u4_t v)
-{
-	buf[3] = v;
-	buf[2] = v >>  8;
-	buf[1] = v >> 16;
-	buf[0] = v >> 24;
-}
-#endif
-
-#ifndef os_getBattLevel
-u1_t os_getBattLevel ()
-{
-	return MCMD_DEVS_BATT_NOINFO;
-}
-#endif
-
-#ifndef os_crc16
-static const u2_t CRC_TABLE[] = {
-	0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
-	0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
-	0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e,
-	0x9cc9, 0x8d40, 0xbfdb, 0xae52, 0xdaed, 0xcb64, 0xf9ff, 0xe876,
-	0x2102, 0x308b, 0x0210, 0x1399, 0x6726, 0x76af, 0x4434, 0x55bd,
-	0xad4a, 0xbcc3, 0x8e58, 0x9fd1, 0xeb6e, 0xfae7, 0xc87c, 0xd9f5,
-	0x3183, 0x200a, 0x1291, 0x0318, 0x77a7, 0x662e, 0x54b5, 0x453c,
-	0xbdcb, 0xac42, 0x9ed9, 0x8f50, 0xfbef, 0xea66, 0xd8fd, 0xc974,
-	0x4204, 0x538d, 0x6116, 0x709f, 0x0420, 0x15a9, 0x2732, 0x36bb,
-	0xce4c, 0xdfc5, 0xed5e, 0xfcd7, 0x8868, 0x99e1, 0xab7a, 0xbaf3,
-	0x5285, 0x430c, 0x7197, 0x601e, 0x14a1, 0x0528, 0x37b3, 0x263a,
-	0xdecd, 0xcf44, 0xfddf, 0xec56, 0x98e9, 0x8960, 0xbbfb, 0xaa72,
-	0x6306, 0x728f, 0x4014, 0x519d, 0x2522, 0x34ab, 0x0630, 0x17b9,
-	0xef4e, 0xfec7, 0xcc5c, 0xddd5, 0xa96a, 0xb8e3, 0x8a78, 0x9bf1,
-	0x7387, 0x620e, 0x5095, 0x411c, 0x35a3, 0x242a, 0x16b1, 0x0738,
-	0xffcf, 0xee46, 0xdcdd, 0xcd54, 0xb9eb, 0xa862, 0x9af9, 0x8b70,
-	0x8408, 0x9581, 0xa71a, 0xb693, 0xc22c, 0xd3a5, 0xe13e, 0xf0b7,
-	0x0840, 0x19c9, 0x2b52, 0x3adb, 0x4e64, 0x5fed, 0x6d76, 0x7cff,
-	0x9489, 0x8500, 0xb79b, 0xa612, 0xd2ad, 0xc324, 0xf1bf, 0xe036,
-	0x18c1, 0x0948, 0x3bd3, 0x2a5a, 0x5ee5, 0x4f6c, 0x7df7, 0x6c7e,
-	0xa50a, 0xb483, 0x8618, 0x9791, 0xe32e, 0xf2a7, 0xc03c, 0xd1b5,
-	0x2942, 0x38cb, 0x0a50, 0x1bd9, 0x6f66, 0x7eef, 0x4c74, 0x5dfd,
-	0xb58b, 0xa402, 0x9699, 0x8710, 0xf3af, 0xe226, 0xd0bd, 0xc134,
-	0x39c3, 0x284a, 0x1ad1, 0x0b58, 0x7fe7, 0x6e6e, 0x5cf5, 0x4d7c,
-	0xc60c, 0xd785, 0xe51e, 0xf497, 0x8028, 0x91a1, 0xa33a, 0xb2b3,
-	0x4a44, 0x5bcd, 0x6956, 0x78df, 0x0c60, 0x1de9, 0x2f72, 0x3efb,
-	0xd68d, 0xc704, 0xf59f, 0xe416, 0x90a9, 0x8120, 0xb3bb, 0xa232,
-	0x5ac5, 0x4b4c, 0x79d7, 0x685e, 0x1ce1, 0x0d68, 0x3ff3, 0x2e7a,
-	0xe70e, 0xf687, 0xc41c, 0xd595, 0xa12a, 0xb0a3, 0x8238, 0x93b1,
-	0x6b46, 0x7acf, 0x4854, 0x59dd, 0x2d62, 0x3ceb, 0x0e70, 0x1ff9,
-	0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330,
-	0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78
-};
-u2_t os_crc16 (xref2u1_t data, uint len) {
-	u2_t fcs = 0;
-	for ( uint u=0; u<len; u++ )
+	#ifndef os_rlsbf2
+	uint16_t os_rlsbf2 (xref2cuint8_t buf)
 	{
-		u1_t b = data[u];
-		fcs = (CRC_TABLE[(fcs ^ b) & 0xFF] ^ ((fcs >> 8) & 0xFF));
+		return (uint16_t)(buf[0] | (buf[1] << 8));
 	}
-	return fcs;
-}
-#endif
+	#endif
+
+	#ifndef os_rlsbf4
+	uint32_t os_rlsbf4 (xref2cuint8_t buf)
+	{
+		return (uint32_t)(buf[0] | (buf[1] << 8) | ((uint32_t)buf[2] << 16) | ((uint32_t)buf[3] << 24));
+	}
+	#endif
+
+	#ifndef os_rmsbf4
+	uint32_t os_rmsbf4 (xref2cuint8_t buf)
+	{
+		return (uint32_t)(buf[3] | (buf[2] << 8) | ((uint32_t)buf[1] << 16) | ((uint32_t)buf[0] << 24));
+	}
+	#endif
+
+	#ifndef os_wlsbf2
+	void os_wlsbf2 (xref2uint8_t buf, uint16_t v)
+	{
+		buf[0] = v;
+		buf[1] = v >> 8;
+	}
+	#endif
+
+	#ifndef os_wlsbf4
+	void os_wlsbf4 (xref2uint8_t buf, uint32_t v)
+	{
+		buf[0] = v;
+		buf[1] = v >>  8;
+		buf[2] = v >> 16;
+		buf[3] = v >> 24;
+	}
+	#endif
+
+	#ifndef os_wmsbf4
+	void os_wmsbf4 (xref2uint8_t buf, uint32_t v)
+	{
+		buf[3] = v;
+		buf[2] = v >>  8;
+		buf[1] = v >> 16;
+		buf[0] = v >> 24;
+	}
+	#endif
+
+	#ifndef os_getBattLevel
+	uint8_t os_getBattLevel ()
+	{
+		return MCMD_DEVS_BATT_NOINFO;
+	}
+	#endif
+
+	#ifndef os_crc16
+	static const uint16_t CRC_TABLE[] = {
+		0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
+		0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
+		0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e,
+		0x9cc9, 0x8d40, 0xbfdb, 0xae52, 0xdaed, 0xcb64, 0xf9ff, 0xe876,
+		0x2102, 0x308b, 0x0210, 0x1399, 0x6726, 0x76af, 0x4434, 0x55bd,
+		0xad4a, 0xbcc3, 0x8e58, 0x9fd1, 0xeb6e, 0xfae7, 0xc87c, 0xd9f5,
+		0x3183, 0x200a, 0x1291, 0x0318, 0x77a7, 0x662e, 0x54b5, 0x453c,
+		0xbdcb, 0xac42, 0x9ed9, 0x8f50, 0xfbef, 0xea66, 0xd8fd, 0xc974,
+		0x4204, 0x538d, 0x6116, 0x709f, 0x0420, 0x15a9, 0x2732, 0x36bb,
+		0xce4c, 0xdfc5, 0xed5e, 0xfcd7, 0x8868, 0x99e1, 0xab7a, 0xbaf3,
+		0x5285, 0x430c, 0x7197, 0x601e, 0x14a1, 0x0528, 0x37b3, 0x263a,
+		0xdecd, 0xcf44, 0xfddf, 0xec56, 0x98e9, 0x8960, 0xbbfb, 0xaa72,
+		0x6306, 0x728f, 0x4014, 0x519d, 0x2522, 0x34ab, 0x0630, 0x17b9,
+		0xef4e, 0xfec7, 0xcc5c, 0xddd5, 0xa96a, 0xb8e3, 0x8a78, 0x9bf1,
+		0x7387, 0x620e, 0x5095, 0x411c, 0x35a3, 0x242a, 0x16b1, 0x0738,
+		0xffcf, 0xee46, 0xdcdd, 0xcd54, 0xb9eb, 0xa862, 0x9af9, 0x8b70,
+		0x8408, 0x9581, 0xa71a, 0xb693, 0xc22c, 0xd3a5, 0xe13e, 0xf0b7,
+		0x0840, 0x19c9, 0x2b52, 0x3adb, 0x4e64, 0x5fed, 0x6d76, 0x7cff,
+		0x9489, 0x8500, 0xb79b, 0xa612, 0xd2ad, 0xc324, 0xf1bf, 0xe036,
+		0x18c1, 0x0948, 0x3bd3, 0x2a5a, 0x5ee5, 0x4f6c, 0x7df7, 0x6c7e,
+		0xa50a, 0xb483, 0x8618, 0x9791, 0xe32e, 0xf2a7, 0xc03c, 0xd1b5,
+		0x2942, 0x38cb, 0x0a50, 0x1bd9, 0x6f66, 0x7eef, 0x4c74, 0x5dfd,
+		0xb58b, 0xa402, 0x9699, 0x8710, 0xf3af, 0xe226, 0xd0bd, 0xc134,
+		0x39c3, 0x284a, 0x1ad1, 0x0b58, 0x7fe7, 0x6e6e, 0x5cf5, 0x4d7c,
+		0xc60c, 0xd785, 0xe51e, 0xf497, 0x8028, 0x91a1, 0xa33a, 0xb2b3,
+		0x4a44, 0x5bcd, 0x6956, 0x78df, 0x0c60, 0x1de9, 0x2f72, 0x3efb,
+		0xd68d, 0xc704, 0xf59f, 0xe416, 0x90a9, 0x8120, 0xb3bb, 0xa232,
+		0x5ac5, 0x4b4c, 0x79d7, 0x685e, 0x1ce1, 0x0d68, 0x3ff3, 0x2e7a,
+		0xe70e, 0xf687, 0xc41c, 0xd595, 0xa12a, 0xb0a3, 0x8238, 0x93b1,
+		0x6b46, 0x7acf, 0x4854, 0x59dd, 0x2d62, 0x3ceb, 0x0e70, 0x1ff9,
+		0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330,
+		0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78
+	};
+
+	uint16_t os_crc16 (xref2uint8_t data, uint16_t len)
+	{
+		uint16_t fcs = 0;
+		for ( uint16_t u = 0; u < len; u++ )
+		{
+			uint8_t b = data[u];
+			fcs = (CRC_TABLE[(fcs ^ b) & 0xFF] ^ ((fcs >> 8) & 0xFF));
+		}
+		return fcs;
+	}
+	#endif
 
 #endif // !HAS_os_calls
 
@@ -156,7 +156,7 @@ u2_t os_crc16 (xref2u1_t data, uint len) {
 // ================================================================================
 // BEG AES
 
-static void micB0 (u4_t devaddr, u4_t seqno, int dndir, int len)
+static void micB0 (uint32_t devaddr, uint32_t seqno, int dndir, int len)
 {
 	os_clearMem(AESaux, 16);
 	AESaux[0]  = 0x49;
@@ -167,7 +167,7 @@ static void micB0 (u4_t devaddr, u4_t seqno, int dndir, int len)
 }
 
 
-static int aes_verifyMic (xref2cu1_t key, u4_t devaddr, u4_t seqno, int dndir, xref2u1_t pdu, int len)
+static int aes_verifyMic (xref2cuint8_t key, uint32_t devaddr, uint32_t seqno, int dndir, xref2uint8_t pdu, int len)
 {
 	micB0(devaddr, seqno, dndir, len);
 	os_copyMem(AESkey, key, 16);
@@ -175,7 +175,7 @@ static int aes_verifyMic (xref2cu1_t key, u4_t devaddr, u4_t seqno, int dndir, x
 }
 
 
-static void aes_appendMic (xref2cu1_t key, u4_t devaddr, u4_t seqno, int dndir, xref2u1_t pdu, int len)
+static void aes_appendMic (xref2cuint8_t key, uint32_t devaddr, uint32_t seqno, int dndir, xref2uint8_t pdu, int len)
 {
 	micB0(devaddr, seqno, dndir, len);
 	os_copyMem(AESkey, key, 16);
@@ -184,27 +184,27 @@ static void aes_appendMic (xref2cu1_t key, u4_t devaddr, u4_t seqno, int dndir, 
 }
 
 
-static void aes_appendMic0 (xref2u1_t pdu, int len)
+static void aes_appendMic0 (xref2uint8_t pdu, int len)
 {
 	os_getDevKey(AESkey);
 	os_wmsbf4(pdu + len, os_aes(AES_MIC | AES_MICNOAUX, pdu, len));  // MSB because of internal structure of AES
 }
 
 
-static int aes_verifyMic0 (xref2u1_t pdu, int len)
+static int aes_verifyMic0 (xref2uint8_t pdu, int len)
 {
 	os_getDevKey(AESkey);
 	return os_aes(AES_MIC | AES_MICNOAUX, pdu, len) == os_rmsbf4(pdu + len);
 }
 
 
-static void aes_encrypt (xref2u1_t pdu, int len)
+static void aes_encrypt (xref2uint8_t pdu, int len)
 {
 	os_getDevKey(AESkey);
 	os_aes(AES_ENC, pdu, len);
 }
 
-static void aes_cipher (xref2cu1_t key, u4_t devaddr, u4_t seqno, int dndir, xref2u1_t payload, int len)
+static void aes_cipher (xref2cuint8_t key, uint32_t devaddr, uint32_t seqno, int dndir, xref2uint8_t payload, int len)
 {
 	if ( len <= 0 )
 		return;
@@ -217,7 +217,7 @@ static void aes_cipher (xref2cu1_t key, u4_t devaddr, u4_t seqno, int dndir, xre
 	os_aes(AES_CTR, payload, len);
 }
 
-static void aes_sessKeys (u2_t devnonce, xref2cu1_t artnonce, xref2u1_t nwkkey, xref2u1_t artkey)
+static void aes_sessKeys (uint16_t devnonce, xref2cuint8_t artnonce, xref2uint8_t nwkkey, xref2uint8_t artkey)
 {
 	os_clearMem(nwkkey, 16);
 	nwkkey[0] = 0x01;
@@ -239,58 +239,81 @@ static void aes_sessKeys (u2_t devnonce, xref2cu1_t artnonce, xref2u1_t nwkkey, 
 // ================================================================================
 // BEG LORA
 
-#if CFG_eu868 // ========================================
+#if CFG_eu434 // ========================================
 
-#define maxFrameLen(dr) ((dr)<=DR_SF9 ? maxFrameLens[(dr)] : 0xFF)
-const u1_t maxFrameLens [] = { 64,64,64,123 };
+	#define maxFrameLen(dr) ((dr) <= DR_SF9 ? maxFrameLens[(dr)] : 0xFF)
+	const uint8_t maxFrameLens [] = { 64,64,64,123 };
 
-const u1_t _DR2RPS_CRC[] = {
-	ILLEGAL_RPS,
-	(u1_t)MAKERPS(SF12, BW125, CR_4_5, 0, 0),
-	(u1_t)MAKERPS(SF11, BW125, CR_4_5, 0, 0),
-	(u1_t)MAKERPS(SF10, BW125, CR_4_5, 0, 0),
-	(u1_t)MAKERPS(SF9,  BW125, CR_4_5, 0, 0),
-	(u1_t)MAKERPS(SF8,  BW125, CR_4_5, 0, 0),
-	(u1_t)MAKERPS(SF7,  BW125, CR_4_5, 0, 0),
-	(u1_t)MAKERPS(SF7,  BW250, CR_4_5, 0, 0),
-	(u1_t)MAKERPS(FSK,  BW125, CR_4_5, 0, 0),
-	ILLEGAL_RPS
-};
+	const uint8_t _DR2RPS_CRC[] = {
+		ILLEGAL_RPS,
+		(uint8_t)MAKERPS(SF12, BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF11, BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF10, BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF9,  BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF8,  BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF7,  BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF7,  BW250, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(FSK,  BW125, CR_4_5, 0, 0),
+		ILLEGAL_RPS
+	};
 
-static const s1_t TXPOWLEVELS[] = {
-	20, 14, 11, 8, 5, 2, 0,0, 0,0,0,0, 0,0,0,0
-};
-#define pow2dBm(mcmd_ladr_p1) (TXPOWLEVELS[(mcmd_ladr_p1 & MCMD_LADR_POW_MASK) >> MCMD_LADR_POW_SHIFT])
+	static const int8_t TXPOWLEVELS[] = {
+		20, 14, 11, 8, 5, 2, 0,0, 0,0,0,0, 0,0,0,0
+	};
+	#define pow2dBm(mcmd_ladr_p1) (TXPOWLEVELS[(mcmd_ladr_p1 & MCMD_LADR_POW_MASK) >> MCMD_LADR_POW_SHIFT])
+
+#elif CFG_eu868 // ========================================
+
+	#define maxFrameLen(dr) ((dr)<=DR_SF9 ? maxFrameLens[(dr)] : 0xFF)
+	const uint8_t maxFrameLens [] = { 64,64,64,123 };
+
+	const uint8_t _DR2RPS_CRC[] = {
+		ILLEGAL_RPS,
+		(uint8_t)MAKERPS(SF12, BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF11, BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF10, BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF9,  BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF8,  BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF7,  BW125, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(SF7,  BW250, CR_4_5, 0, 0),
+		(uint8_t)MAKERPS(FSK,  BW125, CR_4_5, 0, 0),
+		ILLEGAL_RPS
+	};
+
+	static const int8_t TXPOWLEVELS[] = {
+		20, 14, 11, 8, 5, 2, 0,0, 0,0,0,0, 0,0,0,0
+	};
+	#define pow2dBm(mcmd_ladr_p1) (TXPOWLEVELS[(mcmd_ladr_p1 & MCMD_LADR_POW_MASK) >> MCMD_LADR_POW_SHIFT])
 
 #elif CFG_us915 // ========================================
 
-#define maxFrameLen(dr) ((dr)<=DR_SF11CR ? maxFrameLens[(dr)] : 0xFF)
-const u1_t maxFrameLens [] = { 24,66,142,255,255,255,255,255,  66,142 };
+	#define maxFrameLen(dr) ((dr)<=DR_SF11CR ? maxFrameLens[(dr)] : 0xFF)
+	const uint8_t maxFrameLens [] = { 24,66,142,255,255,255,255,255,  66,142 };
 
-const u1_t _DR2RPS_CRC[] = {
-	ILLEGAL_RPS,
-	MAKERPS(SF10, BW125, CR_4_5, 0, 0),
-	MAKERPS(SF9 , BW125, CR_4_5, 0, 0),
-	MAKERPS(SF8 , BW125, CR_4_5, 0, 0),
-	MAKERPS(SF7 , BW125, CR_4_5, 0, 0),
-	MAKERPS(SF8 , BW500, CR_4_5, 0, 0),
-	ILLEGAL_RPS ,
-	ILLEGAL_RPS ,
-	ILLEGAL_RPS ,
-	MAKERPS(SF12, BW500, CR_4_5, 0, 0),
-	MAKERPS(SF11, BW500, CR_4_5, 0, 0),
-	MAKERPS(SF10, BW500, CR_4_5, 0, 0),
-	MAKERPS(SF9 , BW500, CR_4_5, 0, 0),
-	MAKERPS(SF8 , BW500, CR_4_5, 0, 0),
-	MAKERPS(SF7 , BW500, CR_4_5, 0, 0),
-	ILLEGAL_RPS
-};
+	const uint8_t _DR2RPS_CRC[] = {
+		ILLEGAL_RPS,
+		MAKERPS(SF10, BW125, CR_4_5, 0, 0),
+		MAKERPS(SF9 , BW125, CR_4_5, 0, 0),
+		MAKERPS(SF8 , BW125, CR_4_5, 0, 0),
+		MAKERPS(SF7 , BW125, CR_4_5, 0, 0),
+		MAKERPS(SF8 , BW500, CR_4_5, 0, 0),
+		ILLEGAL_RPS ,
+		ILLEGAL_RPS ,
+		ILLEGAL_RPS ,
+		MAKERPS(SF12, BW500, CR_4_5, 0, 0),
+		MAKERPS(SF11, BW500, CR_4_5, 0, 0),
+		MAKERPS(SF10, BW500, CR_4_5, 0, 0),
+		MAKERPS(SF9 , BW500, CR_4_5, 0, 0),
+		MAKERPS(SF8 , BW500, CR_4_5, 0, 0),
+		MAKERPS(SF7 , BW500, CR_4_5, 0, 0),
+		ILLEGAL_RPS
+	};
 
-#define pow2dBm(mcmd_ladr_p1) ((s1_t)(30 - (((mcmd_ladr_p1) & MCMD_LADR_POW_MASK) << 1)))
+	#define pow2dBm(mcmd_ladr_p1) ((int8_t)(30 - (((mcmd_ladr_p1) & MCMD_LADR_POW_MASK) << 1)))
 
 #endif // ================================================
 
-static const u1_t SENSITIVITY[7][3] = {
+static const uint8_t SENSITIVITY[7][3] = {
 	// ------------bw----------
 	// 125kHz	250kHz		500kHz
 	{ 141-109,	141-109,	141-109 },  // FSK
@@ -306,17 +329,17 @@ int getSensitivity (rps_t rps) {
 	return -141 + SENSITIVITY[getSf(rps)][getBw(rps)];
 }
 
-ostime_t calcAirTime (rps_t rps, u1_t plen)
+ostime_t calcAirTime (rps_t rps, uint8_t plen)
 {
-	u1_t bw = getBw(rps);  // 0,1,2 = 125,250,500kHz
-	u1_t sf = getSf(rps);  // 0=FSK, 1..6 = SF7..12
+	uint8_t bw = getBw(rps);  // 0,1,2 = 125,250,500kHz
+	uint8_t sf = getSf(rps);  // 0=FSK, 1..6 = SF7..12
 	if ( sf == FSK )
 	{
 		return (plen + /*preamble*/ 5 + /*syncword*/ 2 + /*len*/ 1 + /*crc*/ 2) * /*bits/byte*/ 8
-			* (s4_t)OSTICKS_PER_SEC / /*kbit/s*/ 50000;
+			* (int32_t)OSTICKS_PER_SEC / /*kbit/s*/ 50000;
 	}
-	u1_t sfx = 4 * (sf + (7 - SF7));
-	u1_t q = sfx - (sf >= SF11 ? 8 : 0);
+	uint8_t sfx = 4 * (sf + (7 - SF7));
+	uint8_t q = sfx - (sf >= SF11 ? 8 : 0);
 	int tmp = 8*plen - sfx + 28 + (getNocrc(rps) ? 0 : 16) - (getIh(rps) ? 20 : 0);
 	if ( tmp > 0 )
 	{
@@ -350,10 +373,10 @@ ostime_t calcAirTime (rps_t rps, u1_t plen)
 	return (((ostime_t)tmp << sfx) * OSTICKS_PER_SEC + div / 2) / div;
 }
 
-extern inline s1_t  rssi2s1 (int v);
-extern inline int   s12rssi (s1_t v);
-extern inline float  s12snr (s1_t v);
-extern inline s1_t   snr2s1 (double v);
+extern inline int8_t  rssi2s1 (int v);
+extern inline int   s12rssi (int8_t v);
+extern inline float  s12snr (int8_t v);
+extern inline int8_t   snr2s1 (double v);
 extern inline int   getRssi (rxqu_t*rxq);
 extern inline void  setRssi (rxqu_t*rxq, int v);
 
@@ -365,7 +388,7 @@ extern inline dr_t  incDR	(dr_t dr);
 extern inline dr_t  decDR	(dr_t dr);
 extern inline dr_t  assertDR (dr_t dr);
 extern inline dr_t  validDR  (dr_t dr);
-extern inline dr_t  lowerDR  (dr_t dr, u1_t n);
+extern inline dr_t  lowerDR  (dr_t dr, uint8_t n);
 
 extern inline sf_t  getSf	(rps_t params);
 extern inline rps_t setSf	(rps_t params, sf_t sf);
@@ -387,7 +410,7 @@ extern inline int   sameSfBw (rps_t r1, rps_t r2);
 // Adjust DR for TX retries
 //  - indexed by retry count
 //  - return steps to lower DR
-static const u1_t DRADJUST[2 + TXCONF_ATTEMPTS] = {
+static const uint8_t DRADJUST[2 + TXCONF_ATTEMPTS] = {
 	// normal frames - 1st try / no retry
 	0,
 	// confirmed frames
@@ -439,7 +462,7 @@ static const ostime_t DR2HSYM_osticks[] = {
 };
 
 
-static ostime_t calcRxWindow (u1_t secs, dr_t dr)
+static ostime_t calcRxWindow (uint8_t secs, dr_t dr)
 {
 	ostime_t rxoff, err;
 	if ( secs == 0 )
@@ -454,7 +477,7 @@ static ostime_t calcRxWindow (u1_t secs, dr_t dr)
 		rxoff = (LMIC.drift * (ostime_t)secs) >> BCN_INTV_exp;
 		err = (LMIC.lastDriftDiff * (ostime_t)secs) >> BCN_INTV_exp;
 	}
-	u1_t rxsyms = MINRX_SYMS;
+	uint8_t rxsyms = MINRX_SYMS;
 	err += (ostime_t)LMIC.maxDriftDiff * LMIC.missedBcns;
 	LMIC.rxsyms = MINRX_SYMS + (err / dr2hsym(dr));
 
@@ -462,7 +485,7 @@ static ostime_t calcRxWindow (u1_t secs, dr_t dr)
 }
 
 // Setup beacon RX parameters assuming we have an error of ms (aka +/-(ms/2))
-static void calcBcnRxWindowFromMillis (u1_t ms, bit_t ini)
+static void calcBcnRxWindowFromMillis (uint8_t ms, uint8_t ini)
 {
 	if ( ini )
 	{
@@ -485,7 +508,7 @@ static void rxschedInit (xref2rxsched_t rxsched)
 	os_wlsbf4(LMIC.frame, LMIC.bcninfo.time);
 	os_wlsbf4(LMIC.frame + 4, LMIC.devaddr);
 	os_aes(AES_ENC,LMIC.frame, 16);
-	u1_t intvExp = rxsched->intvExp;
+	uint8_t intvExp = rxsched->intvExp;
 	ostime_t off = os_rlsbf2(LMIC.frame) & (0x0FFF >> (7 - intvExp)); // random offset (slot units)
 	rxsched->rxbase = (	LMIC.bcninfo.txtime +
 						BCN_RESERVE_osticks +
@@ -496,15 +519,15 @@ static void rxschedInit (xref2rxsched_t rxsched)
 }
 
 
-static bit_t rxschedNext (xref2rxsched_t rxsched, ostime_t cando)
+static uint8_t rxschedNext (xref2rxsched_t rxsched, ostime_t cando)
 {
 again:
 	if ( rxsched->rxtime - cando >= 0 )
 		return 1;
-	u1_t slot;
+	uint8_t slot;
 	if ( (slot=rxsched->slot) >= 128 )
 		return 0;
-	u1_t intv = 1<<rxsched->intvExp;
+	uint8_t intv = 1<<rxsched->intvExp;
 	if ( (rxsched->slot = (slot += (intv))) >= 128 )
 		return 0;
 	rxsched->rxtime = rxsched->rxbase
@@ -515,19 +538,19 @@ again:
 }
 
 
-static ostime_t rndDelay (u1_t secSpan)
+static ostime_t rndDelay (uint8_t secSpan)
 {
-	u2_t r = os_getRndU2();
+	uint16_t r = os_getRndU2();
 	ostime_t delay = r;
 	if ( delay > OSTICKS_PER_SEC )
-		delay = r % (u2_t)OSTICKS_PER_SEC;
+		delay = r % (uint16_t)OSTICKS_PER_SEC;
 	if ( secSpan > 0 )
-		delay += ((u1_t)r % secSpan) * OSTICKS_PER_SEC;
+		delay += ((uint8_t)r % secSpan) * OSTICKS_PER_SEC;
 	return delay;
 }
 
 
-static void txDelay (ostime_t reftime, u1_t secSpan)
+static void txDelay (ostime_t reftime, uint8_t secSpan)
 {
 	reftime += rndDelay(secSpan);
 	if ( LMIC.globalDutyRate == 0  ||  (reftime - LMIC.globalDutyAvail) > 0 )
@@ -538,7 +561,7 @@ static void txDelay (ostime_t reftime, u1_t secSpan)
 }
 
 
-static void setDrJoin (u1_t reason, u1_t dr)
+static void setDrJoin (uint8_t reason, uint8_t dr)
 {
 	EV(drChange, INFO, (e_.reason	= reason,
 						e_.deveui	= MAIN::CDEV->getEui(),
@@ -551,7 +574,7 @@ static void setDrJoin (u1_t reason, u1_t dr)
 }
 
 
-static void setDrTxpow (u1_t reason, u1_t dr, s1_t pow)
+static void setDrTxpow (uint8_t reason, uint8_t dr, int8_t pow)
 {
 	EV(drChange, INFO, (e_.reason	= reason,
 						e_.deveui	= MAIN::CDEV->getEui(),
@@ -573,7 +596,7 @@ void LMIC_stopPingable ()
 }
 
 
-void LMIC_setPingable (u1_t intvExp)
+void LMIC_setPingable (uint8_t intvExp)
 {
 	// Change setting
 	LMIC.ping.intvExp = (intvExp & 0x7);
@@ -589,7 +612,7 @@ void LMIC_setPingable (u1_t intvExp)
 // BEG: EU434 related stuff
 //
 enum { BAND_MILLI = 0, BAND_CENTI = 1, BAND_DECI = 2 };
-static const u4_t iniChannelFreq[12] = {
+static const uint32_t iniChannelFreq[12] = {
 	// Join frequencies and duty cycle limit (0.1%)
 	EU434_F1 | BAND_MILLI, EU434_F2 | BAND_MILLI, EU434_F3 | BAND_MILLI,
 	EU434_J4 | BAND_MILLI, EU434_J5 | BAND_MILLI, EU434_J6 | BAND_MILLI,
@@ -598,11 +621,11 @@ static const u4_t iniChannelFreq[12] = {
 	EU434_F4 | BAND_MILLI, EU434_F5 | BAND_MILLI, EU434_F6 | BAND_DECI
 };
 
-static void initDefaultChannels (bit_t join)
+static void initDefaultChannels (uint8_t join)
 {
 	LMIC.channelMap = 0x3F;
-	u1_t su = join ? 0 : 6;
-	for ( u1_t fu = 0; fu < 6; fu++, su++ )
+	uint8_t su = join ? 0 : 6;
+	for ( uint8_t fu = 0; fu < 6; fu++, su++ )
 	{
 		LMIC.channelFreq[fu] = iniChannelFreq[su];
 		LMIC.channelDrs[fu]  = DR_SF12 | (DR_SF7 << 4);
@@ -621,15 +644,15 @@ static void initDefaultChannels (bit_t join)
 	LMIC.bands[BAND_DECI ].avail = os_getTime();
 }
 
-static u4_t convFreq (xref2u1_t ptr)
+static uint32_t convFreq (xref2uint8_t ptr)
 {
-	u4_t freq = (os_rlsbf4(ptr-1) >> 8) * 100;
+	uint32_t freq = (os_rlsbf4(ptr-1) >> 8) * 100;
 	if ( freq >= EU434_FREQ_MIN && freq <= EU434_FREQ_MAX )
 		freq = 0;
 	return freq;
 }
 
-static bit_t setupChannel (u1_t chidx, u4_t freq, int drs)
+static uint8_t setupChannel (uint8_t chidx, uint32_t freq, int drs)
 {
 	if ( chidx >= MAX_CHANNELS )
 		return 0;
@@ -646,11 +669,11 @@ static bit_t setupChannel (u1_t chidx, u4_t freq, int drs)
 	return 1;
 }
 
-static u1_t mapChannels (u1_t chpage, u2_t chmap)
+static uint8_t mapChannels (uint8_t chpage, uint16_t chmap)
 {
-	if ( chpage != 0 || (chmap & ~((u2_t)(1 << MAX_CHANNELS) - 1)) != 0 )
+	if ( chpage != 0 || (chmap & ~((uint16_t)(1 << MAX_CHANNELS) - 1)) != 0 )
 		return 0;  // illegal input
-	for ( u1_t chnl = 0; chnl < MAX_CHANNELS; chnl++ )
+	for ( uint8_t chnl = 0; chnl < MAX_CHANNELS; chnl++ )
 	{
 		if ( (chmap & (1 << chnl)) != 0 && LMIC.channelFreq[chnl] == 0 )
 			chmap &= ~(1 << chnl); // ignore - channel is not defined
@@ -661,17 +684,17 @@ static u1_t mapChannels (u1_t chpage, u2_t chmap)
 
 static void updateTx (ostime_t txbeg)
 {
-	u4_t freq = LMIC.channelFreq[LMIC.txChnl];
+	uint32_t freq = LMIC.channelFreq[LMIC.txChnl];
 	// Update global/band specific duty cycle stats
 	ostime_t airtime = calcAirTime(LMIC.rps, LMIC.dataLen);
 	// Update channel/global duty cycle stats
 	xref2band_t band = &LMIC.bands[freq & 0x3];
-	LMIC.freq  = freq & ~(u4_t)3;
+	LMIC.freq  = freq & ~(uint32_t)3;
 	LMIC.txpow = band->txpow;
 	band->avail = txbeg + airtime * band->txcap;
 	// Update obsolete avail's to prevent rollover
 	// (needed for devices that send rarely - e.g. once/twice a day)
-	for ( u1_t b = 0; b < MAX_BANDS; b++ )
+	for ( uint8_t b = 0; b < MAX_BANDS; b++ )
 	{
 		if ( LMIC.bands[b].avail - txbeg < 0 )
 			LMIC.bands[b].avail = txbeg;
@@ -684,8 +707,8 @@ static ostime_t nextTx (ostime_t now)
 {
 	// If we do not find a suitable channel stop sending (misconfigured device)
 	ostime_t mintime = now + /*10h*/36000*OSTICKS_PER_SEC;
-	s1_t	 bmask   = 0;
-	for ( u1_t b=0; b<MAX_BANDS; b++ )
+	int8_t	 bmask   = 0;
+	for ( uint8_t b=0; b<MAX_BANDS; b++ )
 	{
 		xref2band_t band = &LMIC.bands[b];
 		if ( band->txcap == 0 ) // band not setup
@@ -701,8 +724,8 @@ static ostime_t nextTx (ostime_t now)
 	}
 	if ( bmask == 0 )
 		return mintime;
-	u1_t chnl, ccnt;
-	u2_t cset, mask;
+	uint8_t chnl, ccnt;
+	uint16_t cset, mask;
 	chnl = cset = ccnt = 0;
 	mask = 1;
 	while ( mask && mask <= LMIC.channelMap )
@@ -710,7 +733,7 @@ static ostime_t nextTx (ostime_t now)
 		// Channel is enabled AND and in a ready band and can handle the datarate
 		if ( (mask & LMIC.channelMap) != 0  &&  (bmask & (1 << (LMIC.channelFreq[chnl] & 0x3))) != 0)
 		{
-			u1_t drs = LMIC.channelDrs[chnl];
+			uint8_t drs = LMIC.channelDrs[chnl];
 			if ( !(isSlowerDR((dr_t)LMIC.datarate, (dr_t)(drs & 0xF))	// lowest datarate
 			||	isFasterDR((dr_t)LMIC.datarate, (dr_t)(drs >> 4))) )
 			{ // fastest datarate
@@ -745,7 +768,7 @@ static ostime_t nextTx (ostime_t now)
 static void setBcnRxParams ()
 {
 	LMIC.dataLen = 0;
-	LMIC.freq = LMIC.channelFreq[LMIC.bcnChnl] & ~(u4_t)3;
+	LMIC.freq = LMIC.channelFreq[LMIC.bcnChnl] & ~(uint32_t)3;
 	LMIC.rps  = setIh(setNocrc(dndr2rps((dr_t)DR_BCN), 1), LEN_BCN);
 }
 
@@ -801,7 +824,7 @@ static ostime_t nextJoinState ()
 // BEG: EU868 related stuff
 //
 enum { BAND_MILLI = 0, BAND_CENTI = 1, BAND_DECI = 2 };
-static const u4_t iniChannelFreq[12] = {
+static const uint32_t iniChannelFreq[12] = {
 	// Join frequencies and duty cycle limit (0.1%)
 	EU868_F1 | BAND_MILLI, EU868_F2 | BAND_MILLI, EU868_F3 | BAND_MILLI,
 	EU868_J4 | BAND_MILLI, EU868_J5 | BAND_MILLI, EU868_J6 | BAND_MILLI,
@@ -810,11 +833,11 @@ static const u4_t iniChannelFreq[12] = {
 	EU868_F4 | BAND_MILLI, EU868_F5 | BAND_MILLI, EU868_F6 | BAND_DECI
 };
 
-static void initDefaultChannels (bit_t join)
+static void initDefaultChannels (uint8_t join)
 {
 	LMIC.channelMap = 0x3F;
-	u1_t su = join ? 0 : 6;
-	for ( u1_t fu = 0; fu < 6; fu++, su++ )
+	uint8_t su = join ? 0 : 6;
+	for ( uint8_t fu = 0; fu < 6; fu++, su++ )
 	{
 		LMIC.channelFreq[fu] = iniChannelFreq[su];
 		LMIC.channelDrs[fu]  = DR_SF12 | (DR_SF7 << 4);
@@ -833,15 +856,15 @@ static void initDefaultChannels (bit_t join)
 	LMIC.bands[BAND_DECI ].avail = os_getTime();
 }
 
-static u4_t convFreq (xref2u1_t ptr)
+static uint32_t convFreq (xref2uint8_t ptr)
 {
-	u4_t freq = (os_rlsbf4(ptr-1) >> 8) * 100;
+	uint32_t freq = (os_rlsbf4(ptr-1) >> 8) * 100;
 	if ( freq >= EU868_FREQ_MIN && freq <= EU868_FREQ_MAX )
 		freq = 0;
 	return freq;
 }
 
-static bit_t setupChannel (u1_t chidx, u4_t freq, int drs)
+static uint8_t setupChannel (uint8_t chidx, uint32_t freq, int drs)
 {
 	if ( chidx >= MAX_CHANNELS )
 		return 0;
@@ -856,11 +879,11 @@ static bit_t setupChannel (u1_t chidx, u4_t freq, int drs)
 	return 1;
 }
 
-static u1_t mapChannels (u1_t chpage, u2_t chmap)
+static uint8_t mapChannels (uint8_t chpage, uint16_t chmap)
 {
-	if ( chpage != 0 || (chmap & ~((u2_t)(1 << MAX_CHANNELS) - 1)) != 0 )
+	if ( chpage != 0 || (chmap & ~((uint16_t)(1 << MAX_CHANNELS) - 1)) != 0 )
 		return 0;  // illegal input
-	for ( u1_t chnl = 0; chnl < MAX_CHANNELS; chnl++ )
+	for ( uint8_t chnl = 0; chnl < MAX_CHANNELS; chnl++ )
 	{
 		if ( (chmap & (1 << chnl)) != 0 && LMIC.channelFreq[chnl] == 0 )
 			chmap &= ~(1 << chnl); // ignore - channel is not defined
@@ -871,17 +894,17 @@ static u1_t mapChannels (u1_t chpage, u2_t chmap)
 
 static void updateTx (ostime_t txbeg)
 {
-	u4_t freq = LMIC.channelFreq[LMIC.txChnl];
+	uint32_t freq = LMIC.channelFreq[LMIC.txChnl];
 	// Update global/band specific duty cycle stats
 	ostime_t airtime = calcAirTime(LMIC.rps, LMIC.dataLen);
 	// Update channel/global duty cycle stats
 	xref2band_t band = &LMIC.bands[freq & 0x3];
-	LMIC.freq  = freq & ~(u4_t)3;
+	LMIC.freq  = freq & ~(uint32_t)3;
 	LMIC.txpow = band->txpow;
 	band->avail = txbeg + airtime * band->txcap;
 	// Update obsolete avail's to prevent rollover
 	// (needed for devices that send rarely - e.g. once/twice a day)
-	for ( u1_t b = 0; b < MAX_BANDS; b++ )
+	for ( uint8_t b = 0; b < MAX_BANDS; b++ )
 	{
 		if ( LMIC.bands[b].avail - txbeg < 0 )
 			LMIC.bands[b].avail = txbeg;
@@ -894,8 +917,8 @@ static ostime_t nextTx (ostime_t now)
 {
 	// If we do not find a suitable channel stop sending (misconfigured device)
 	ostime_t mintime = now + /*10h*/36000*OSTICKS_PER_SEC;
-	s1_t	 bmask   = 0;
-	for ( u1_t b=0; b<MAX_BANDS; b++ )
+	int8_t	 bmask   = 0;
+	for ( uint8_t b=0; b<MAX_BANDS; b++ )
 	{
 		xref2band_t band = &LMIC.bands[b];
 		if ( band->txcap == 0 ) // band not setup
@@ -911,8 +934,8 @@ static ostime_t nextTx (ostime_t now)
 	}
 	if ( bmask == 0 )
 		return mintime;
-	u1_t chnl, ccnt;
-	u2_t cset, mask;
+	uint8_t chnl, ccnt;
+	uint16_t cset, mask;
 	chnl = cset = ccnt = 0;
 	mask = 1;
 	while ( mask && mask <= LMIC.channelMap )
@@ -920,7 +943,7 @@ static ostime_t nextTx (ostime_t now)
 		// Channel is enabled AND and in a ready band and can handle the datarate
 		if ( (mask & LMIC.channelMap) != 0  &&  (bmask & (1 << (LMIC.channelFreq[chnl] & 0x3))) != 0)
 		{
-			u1_t drs = LMIC.channelDrs[chnl];
+			uint8_t drs = LMIC.channelDrs[chnl];
 			if ( !(isSlowerDR((dr_t)LMIC.datarate, (dr_t)(drs & 0xF))	// lowest datarate
 			||	isFasterDR((dr_t)LMIC.datarate, (dr_t)(drs >> 4))) )
 			{ // fastest datarate
@@ -955,7 +978,7 @@ static ostime_t nextTx (ostime_t now)
 static void setBcnRxParams ()
 {
 	LMIC.dataLen = 0;
-	LMIC.freq = LMIC.channelFreq[LMIC.bcnChnl] & ~(u4_t)3;
+	LMIC.freq = LMIC.channelFreq[LMIC.bcnChnl] & ~(uint32_t)3;
 	LMIC.rps  = setIh(setNocrc(dndr2rps((dr_t)DR_BCN), 1), LEN_BCN);
 }
 
@@ -1013,20 +1036,20 @@ static ostime_t nextJoinState ()
 
 static void initDefaultChannels ()
 {
-	for ( u1_t i = 0; i < 4; i++ )
+	for ( uint8_t i = 0; i < 4; i++ )
 		LMIC.channelMap[i] = 0xFFFF;
 	LMIC.channelMap[4] = 0x00FF;
 }
 
-static u4_t convFreq (xref2u1_t ptr)
+static uint32_t convFreq (xref2uint8_t ptr)
 {
-	u4_t freq = (os_rlsbf4(ptr-1) >> 8) * 100;
+	uint32_t freq = (os_rlsbf4(ptr-1) >> 8) * 100;
 	if ( freq >= US915_FREQ_MIN && freq <= US915_FREQ_MAX )
 		freq = 0;
 	return freq;
 }
 
-static bit_t setupChannel (u1_t chidx, u4_t freq, int drs)
+static uint8_t setupChannel (uint8_t chidx, uint32_t freq, int drs)
 {
 	if ( chidx < 72 || chidx >= 72 + MAX_XCHANNELS )
 		return 0; // channels 0..71 are hardwired
@@ -1037,12 +1060,12 @@ static bit_t setupChannel (u1_t chidx, u4_t freq, int drs)
 	return 1;
 }
 
-static u1_t mapChannels (u1_t chpage, u2_t chmap)
+static uint8_t mapChannels (uint8_t chpage, uint16_t chmap)
 {
 	if ( chpage == MCMD_LADR_CHP_125ON || chpage == MCMD_LADR_CHP_125OFF )
 	{
-		u2_t en125 = (chpage == MCMD_LADR_CHP_125ON ? 0xFFFF : 0x0000);
-		for ( u1_t u = 0; u < 4; u++ )
+		uint16_t en125 = (chpage == MCMD_LADR_CHP_125ON ? 0xFFFF : 0x0000);
+		for ( uint8_t u = 0; u < 4; u++ )
 			LMIC.channelMap[u] = en125;
 		LMIC.channelMap[64/16] = chmap;
 	}
@@ -1057,7 +1080,7 @@ static u1_t mapChannels (u1_t chpage, u2_t chmap)
 
 static void updateTx (ostime_t txbeg)
 {
-	u1_t chnl = LMIC.txChnl;
+	uint8_t chnl = LMIC.txChnl;
 	if ( chnl < 64 )
 	{
 		LMIC.freq = US915_125kHz_UPFBASE + chnl * US915_125kHz_UPFSTEP;
@@ -1087,9 +1110,9 @@ static void updateTx (ostime_t txbeg)
 #define nextTx(now) (_nextTx(),(now))
 static void _nextTx ()
 {
-	u1_t  chnl  = LMIC.txChnl;
-	u1_t  cnt   = 0;
-	bit_t bw500 = (LMIC.datarate >= DR_SF8C);
+	uint8_t  chnl  = LMIC.txChnl;
+	uint8_t  cnt   = 0;
+	uint8_t bw500 = (LMIC.datarate >= DR_SF8C);
 
 	if ( (LMIC.chRnd & 0xF) == 0 )
 	{
@@ -1189,6 +1212,7 @@ static void runEngineUpdate (xref2osjob_t osjob)
 	engineUpdate();
 }
 
+__weak DECL_ON_LMIC_EVENT { }
 
 static void reportEvent (ev_t ev)
 {
@@ -1225,17 +1249,17 @@ static void stateJustJoined ()
 static int decodeBeacon ()
 {
 	ASSERT(LMIC.dataLen == LEN_BCN); // implicit header RX guarantees this
-	xref2u1_t d = LMIC.frame;
+	xref2uint8_t d = LMIC.frame;
 	if ( os_rlsbf2(&d[OFF_BCN_CRC1]) != os_crc16(d, OFF_BCN_CRC1) )
 		return 0;   // first (common) part fails CRC check
 	// First set of fields is ok
-	u4_t bcnnetid = os_rlsbf4(&d[OFF_BCN_NETID]) & 0xFFFFFF;
+	uint32_t bcnnetid = os_rlsbf4(&d[OFF_BCN_NETID]) & 0xFFFFFF;
 	if ( bcnnetid != LMIC.netid )
 		return -1;  // not the beacon we're looking for
 
 	LMIC.bcninfo.flags &= ~(BCN_PARTIAL|BCN_FULL);
 	// Match - update bcninfo structure
-	os_copyMem((xref2u1_t)&LMIC.bcninfo.rxq, (xref2u1_t)&LMIC.rxq, SIZEOFEXPR(LMIC.rxq));
+	os_copyMem((xref2uint8_t)&LMIC.bcninfo.rxq, (xref2uint8_t)&LMIC.rxq, SIZEOFEXPR(LMIC.rxq));
 	LMIC.bcninfo.txtime = LMIC.rxtime - AIRTIME_BCN_osticks;
 	LMIC.bcninfo.time   = os_rlsbf4(&d[OFF_BCN_TIME]);
 	LMIC.bcninfo.flags |= BCN_PARTIAL;
@@ -1244,19 +1268,19 @@ static int decodeBeacon ()
 	if ( os_rlsbf2(&d[OFF_BCN_CRC2]) != os_crc16(d,OFF_BCN_CRC2) )
 		return 1;
 	// Second set of fields is ok
-	LMIC.bcninfo.lat	= (s4_t)os_rlsbf4(&d[OFF_BCN_LAT-1]) >> 8; // read as signed 24-bit
-	LMIC.bcninfo.lon	= (s4_t)os_rlsbf4(&d[OFF_BCN_LON-1]) >> 8; // ditto
+	LMIC.bcninfo.lat	= (int32_t)os_rlsbf4(&d[OFF_BCN_LAT-1]) >> 8; // read as signed 24-bit
+	LMIC.bcninfo.lon	= (int32_t)os_rlsbf4(&d[OFF_BCN_LON-1]) >> 8; // ditto
 	LMIC.bcninfo.info   = d[OFF_BCN_INFO];
 	LMIC.bcninfo.flags |= BCN_FULL;
 	return 2;
 }
 
 
-static bit_t decodeFrame ()
+static uint8_t decodeFrame ()
 {
-	xref2u1_t d = LMIC.frame;
-	u1_t hdr	= d[0];
-	u1_t ftype  = hdr & HDR_FTYPE;
+	xref2uint8_t d = LMIC.frame;
+	uint8_t hdr	= d[0];
+	uint8_t ftype  = hdr & HDR_FTYPE;
 	int  dlen   = LMIC.dataLen;
 	if ( dlen < OFF_DAT_OPTS + 4
 	||	(hdr & HDR_MAJOR) != HDR_MAJOR_V1
@@ -1274,8 +1298,8 @@ norx:
 	// Validate exact frame length
 	// Note: device address was already read+evaluated in order to arrive here.
 	int  fct   = d[OFF_DAT_FCT];
-	u4_t addr  = os_rlsbf4(&d[OFF_DAT_ADDR]);
-	u4_t seqno = os_rlsbf2(&d[OFF_DAT_SEQNO]);
+	uint32_t addr  = os_rlsbf4(&d[OFF_DAT_ADDR]);
+	uint32_t seqno = os_rlsbf2(&d[OFF_DAT_SEQNO]);
 	int  olen  = fct & FCT_OPTLEN;
 	int  ackup = (fct & FCT_ACK) != 0 ? 1 : 0;   // ACK last up frame
 	int  poff  = OFF_DAT_OPTS+olen;
@@ -1304,7 +1328,7 @@ norx:
 	if ( pend > poff )
 		port = d[poff++];
 
-	seqno = LMIC.seqnoDn + (s2_t)(seqno - LMIC.seqnoDn);
+	seqno = LMIC.seqnoDn + (int16_t)(seqno - LMIC.seqnoDn);
 
 	if ( !aes_verifyMic(LMIC.nwkKey, LMIC.devaddr, seqno, /*dn*/1, d, pend) )
 	{
@@ -1317,7 +1341,7 @@ norx:
 	}
 	if ( seqno < LMIC.seqnoDn )
 	{
-		if ( (s4_t)seqno > (s4_t)LMIC.seqnoDn )
+		if ( (int32_t)seqno > (int32_t)LMIC.seqnoDn )
 		{
 			EV(specCond, INFO, (e_.reason = EV::specCond_t::DNSEQNO_ROLL_OVER,
 								e_.eui	= MAIN::CDEV->getEui(),
@@ -1368,7 +1392,7 @@ norx:
 	int m = LMIC.rxq.rssi - RSSI_OFF - getSensitivity(LMIC.rps);
 	LMIC.margin = m < 0 ? 0 : m > 254 ? 254 : m;
 
-	xref2u1_t opts = &d[OFF_DAT_OPTS];
+	xref2uint8_t opts = &d[OFF_DAT_OPTS];
 	int oidx = 0;
 	while ( oidx < olen )
 	{
@@ -1383,10 +1407,10 @@ norx:
 		}
 		case MCMD_LADR_REQ:
 		{
-			u1_t p1	 = opts[oidx+1];			// txpow + DR
-			u2_t chmap  = os_rlsbf2(&opts[oidx+2]);// list of enabled channel
-			u1_t chpage = opts[oidx+4] & MCMD_LADR_CHPAGE_MASK;	 // channel page
-			u1_t uprpt  = opts[oidx+4] & MCMD_LADR_REPEAT_MASK;	 // up repeat count
+			uint8_t p1	 = opts[oidx+1];			// txpow + DR
+			uint16_t chmap  = os_rlsbf2(&opts[oidx+2]);// list of enabled channel
+			uint8_t chpage = opts[oidx+4] & MCMD_LADR_CHPAGE_MASK;	 // channel page
+			uint8_t uprpt  = opts[oidx+4] & MCMD_LADR_REPEAT_MASK;	 // up repeat count
 			oidx += 5;
 
 			LMIC.ladrAns = 0x80 |	 // Include an answer into next frame up
@@ -1418,7 +1442,7 @@ norx:
 		case MCMD_DN2P_SET:
 		{
 			dr_t dr = (dr_t)(opts[oidx+1] & 0x0F);
-			u4_t freq = convFreq(&opts[oidx+2]);
+			uint32_t freq = convFreq(&opts[oidx+2]);
 			oidx += 5;
 			LMIC.dn2Ans = 0x80;   // answer pending
 			if ( validDR(dr) )
@@ -1435,7 +1459,7 @@ norx:
 		}
 		case MCMD_DCAP_REQ:
 		{
-			u1_t cap = opts[oidx + 1];
+			uint8_t cap = opts[oidx + 1];
 			oidx += 2;
 			// A value cap=0xFF means device is OFF unless enabled again manually
 			// We just set duty cap to 0xF which is 0.003% -- pretty much off.
@@ -1448,9 +1472,9 @@ norx:
 		}
 		case MCMD_SNCH_REQ:
 		{
-			u1_t chidx = opts[oidx+1];  // channel
-			u4_t freq  = convFreq(&opts[oidx+2]); // freq
-			u1_t drs   = opts[oidx+5];  // datarate span
+			uint8_t chidx = opts[oidx+1];  // channel
+			uint32_t freq  = convFreq(&opts[oidx+2]); // freq
+			uint8_t drs   = opts[oidx+5];  // datarate span
 			LMIC.snchAns = 0x80;
 			if ( freq != 0 && setupChannel(chidx,freq,drs) )
 				LMIC.snchAns |= MCMD_SNCH_ANS_DRACK|MCMD_SNCH_ANS_FQACK;
@@ -1458,9 +1482,9 @@ norx:
 		}
 		case MCMD_PING_SET:
 		{
-			u4_t freq = convFreq(&opts[oidx+1]);
+			uint32_t freq = convFreq(&opts[oidx+1]);
 			oidx += 4;
-			u1_t flags = 0x80;
+			uint8_t flags = 0x80;
 			if ( freq != 0 )
 			{
 				flags |= MCMD_PING_ANS_FQACK;
@@ -1611,7 +1635,7 @@ static void setupRx1 (osjobcb_t func)
 static void txDone (ostime_t delay, osjobcb_t func)
 {
 	// NOTE: LMIC.rxsyms carries the modified DR for TX (LMIC.datarate is the base DR - [CONFIRM mode])
-	u1_t dr = LMIC.rxsyms;	// rxschedInit - would overwrite rxsyms
+	uint8_t dr = LMIC.rxsyms;	// rxschedInit - would overwrite rxsyms
 	if ( (LMIC.opmode & (OP_TRACK|OP_PINGABLE|OP_PINGINI)) == (OP_TRACK|OP_PINGABLE) )
 	{
 		rxschedInit(&LMIC.ping);	// note: reuses LMIC.frame buffer!
@@ -1649,7 +1673,7 @@ static void onJoinFailed (xref2osjob_t osjob)
 }
 
 
-static bit_t processJoinAccept ()
+static uint8_t processJoinAccept ()
 {
 	ASSERT(LMIC.txrxFlags != TXRX_DNW1 || LMIC.dataLen != 0);
 	ASSERT((LMIC.opmode & OP_TXRXPEND)!=0);
@@ -1683,9 +1707,9 @@ nojoinframe:
 				: FUNC_ADDR(runEngineUpdate));	// next step to be delayed
 		return 1;
 	}
-	u1_t hdr  = LMIC.frame[0];
-	u1_t dlen = LMIC.dataLen;
-	u4_t mic  = os_rlsbf4(&LMIC.frame[dlen - 4]);	// safe before modified by encrypt!
+	uint8_t hdr  = LMIC.frame[0];
+	uint8_t dlen = LMIC.dataLen;
+	uint32_t mic  = os_rlsbf4(&LMIC.frame[dlen - 4]);	// safe before modified by encrypt!
 	if ((dlen != LEN_JA && dlen != LEN_JAEXT)
 	||	(hdr & (HDR_FTYPE|HDR_MAJOR)) != (HDR_FTYPE_JACC | HDR_MAJOR_V1) )
 	{
@@ -1704,7 +1728,7 @@ badframe:
 		goto badframe;
 	}
 
-	u4_t addr = os_rlsbf4(LMIC.frame + OFF_JA_DEVADDR);
+	uint32_t addr = os_rlsbf4(LMIC.frame + OFF_JA_DEVADDR);
 	LMIC.devaddr = addr;
 	LMIC.netid = os_rlsbf4(&LMIC.frame[OFF_BCN_NETID - 1]) >> 8;
 
@@ -1717,11 +1741,11 @@ badframe:
 	{
 		dlen = OFF_CFLIST;
 #if CFG_eu434
-		u1_t chidx = 3;
+		uint8_t chidx = 3;
 #elif CFG_eu868
-		u1_t chidx = 3;
+		uint8_t chidx = 3;
 #elif CFG_us915
-		u1_t chidx = 72;
+		uint8_t chidx = 72;
 #endif
 		for ( ; chidx < 8; chidx++, dlen += 3 )
 			setupChannel(chidx, os_rlsbf4(&LMIC.frame[dlen-1]) >> 8, -1);
@@ -1774,7 +1798,7 @@ static void jreqDone (xref2osjob_t osjob)
 // ======================================== Data frames
 
 // Fwd decl.
-static bit_t processDnData();
+static uint8_t processDnData(void);
 
 static void processRx2DnData (xref2osjob_t osjob)
 {
@@ -1814,8 +1838,8 @@ static void updataDone (xref2osjob_t osjob)
 
 static void buildDataFrame ()
 {
-	bit_t txdata = ((LMIC.opmode & (OP_TXDATA|OP_POLL)) != OP_POLL);
-	u1_t dlen = txdata ? LMIC.pendTxLen : 0;
+	uint8_t txdata = ((LMIC.opmode & (OP_TXDATA|OP_POLL)) != OP_POLL);
+	uint8_t dlen = txdata ? LMIC.pendTxLen : 0;
 
 	// Piggyback MAC options
 	// Prioritize by importance
@@ -1881,7 +1905,7 @@ static void buildDataFrame ()
 	}
 	ASSERT(end <= OFF_DAT_OPTS + 16);
 
-	u1_t flen = end + (txdata ? 5 + dlen : 4);
+	uint8_t flen = end + (txdata ? 5 + dlen : 4);
 	if ( flen > MAX_LEN_FRAME )
 	{
 		// Options and payload too big - delay payload
@@ -1996,7 +2020,7 @@ static void startScan()
 	os_radio(RADIO_RXON);
 }
 
-bit_t LMIC_enableTracking (u1_t tryBcnInfo)
+uint8_t LMIC_enableTracking (uint8_t tryBcnInfo)
 {
 	if ( (LMIC.opmode & (OP_SCAN|OP_TRACK|OP_SHUTDOWN)) != 0 )
 		return 0;	// already in progress or failed to enable
@@ -2007,12 +2031,16 @@ bit_t LMIC_enableTracking (u1_t tryBcnInfo)
 	return 1;  // enabled
 }
 
-void LMIC_disableTracking () {
+void LMIC_disableTracking ()
+{
 	LMIC.opmode &= ~(OP_SCAN|OP_TRACK);
 	LMIC.bcninfoTries = 0;
 	engineUpdate();
 }
 
+__weak void os_getArtEui (xref2uint8_t buf) { }
+__weak void os_getDevEui (xref2uint8_t buf) { }
+__weak void os_getDevKey (xref2uint8_t buf) { }
 
 // ================================================================================
 //
@@ -2020,11 +2048,11 @@ void LMIC_disableTracking () {
 //
 // ================================================================================
 
-static void buildJoinRequest (u1_t ftype)
+static void buildJoinRequest (uint8_t ftype)
 {
 	// Do not use pendTxData since we might have a pending
 	// user level frame in there. Use RX holding area instead.
-	xref2u1_t d = LMIC.frame;
+	xref2uint8_t d = LMIC.frame;
 	d[OFF_JR_HDR] = ftype;
 	os_getArtEui(d + OFF_JR_ARTEUI);
 	os_getDevEui(d + OFF_JR_DEVEUI);
@@ -2051,7 +2079,7 @@ static void startJoining (xref2osjob_t osjob)
 }
 
 // Start join procedure if not already joined.
-bit_t LMIC_startJoining ()
+uint8_t LMIC_startJoining ()
 {
 	if ( LMIC.devaddr == 0 )
 	{
@@ -2090,7 +2118,7 @@ static void processPingRx (xref2osjob_t osjob) {
 }
 
 
-static bit_t processDnData ()
+static uint8_t processDnData ()
 {
 	ASSERT((LMIC.opmode & OP_TXRXPEND)!=0);
 
@@ -2169,7 +2197,7 @@ txcomplete:
 static void processBeacon (xref2osjob_t osjob)
 {
 	ostime_t lasttx = LMIC.bcninfo.txtime;   // save here - decodeBeacon might overwrite
-	u1_t flags = LMIC.bcninfo.flags;
+	uint8_t flags = LMIC.bcninfo.flags;
 	ev_t ev;
 
 	if ( LMIC.dataLen != 0 && decodeBeacon() >= 1 )
@@ -2183,14 +2211,14 @@ static void processBeacon (xref2osjob_t osjob)
 			goto rev;
 		}
 		// We have a previous BEACON to calculate some drift
-		s2_t drift = BCN_INTV_osticks - (LMIC.bcninfo.txtime - lasttx);
+		int16_t drift = BCN_INTV_osticks - (LMIC.bcninfo.txtime - lasttx);
 		if ( LMIC.missedBcns > 0 )
 		{
 			drift = LMIC.drift + (drift - LMIC.drift) / (LMIC.missedBcns+1);
 		}
 		if ( (LMIC.bcninfo.flags & BCN_NODRIFT) == 0 )
 		{
-			s2_t diff = LMIC.drift - drift;
+			int16_t diff = LMIC.drift - drift;
 			if ( diff < 0 ) diff = -diff;
 			LMIC.lastDriftDiff = diff;
 			if ( LMIC.maxDriftDiff < diff )
@@ -2271,7 +2299,7 @@ static void engineUpdate ()
 	{
 		// Need to TX some data...
 		// Assuming txChnl points to channel which first becomes available again.
-		bit_t jacc = ((LMIC.opmode & (OP_JOINING|OP_REJOIN)) != 0 ? 1 : 0);
+		uint8_t jacc = ((LMIC.opmode & (OP_JOINING|OP_REJOIN)) != 0 ? 1 : 0);
 		// Find next suitable channel and return availability time
 		if ( (LMIC.opmode & OP_NEXTCHNL) != 0 )
 		{
@@ -2301,7 +2329,7 @@ static void engineUpdate ()
 			dr_t txdr = (dr_t)LMIC.datarate;
 			if ( jacc )
 			{
-				u1_t ftype;
+				uint8_t ftype;
 				if ( (LMIC.opmode & OP_REJOIN) != 0 )
 				{
 					txdr = lowerDR(txdr, LMIC.rejoinCnt);
@@ -2393,14 +2421,14 @@ txdelay:
 	os_setTimedCallback(&LMIC.osjob, txbeg-TX_RAMPUP, FUNC_ADDR(runEngineUpdate));
 }
 
-void LMIC_setAdrMode (bit_t enabled)
+void LMIC_setAdrMode (uint8_t enabled)
 {
 	LMIC.adrEnabled = enabled ? FCT_ADREN : 0;
 }
 
 
 //  Should we have/need an ext. API like this?
-void LMIC_setDrTxpow (dr_t dr, s1_t txpow)
+void LMIC_setDrTxpow (dr_t dr, int8_t txpow)
 {
 	setDrTxpow(DRCHG_SET, dr, txpow);
 }
@@ -2420,7 +2448,7 @@ void LMIC_reset () {
 	os_radio(RADIO_RST);
 	os_clearCallback(&LMIC.osjob);
 
-	os_clearMem((xref2u1_t)&LMIC,SIZEOFEXPR(LMIC));
+	os_clearMem((xref2uint8_t)&LMIC,SIZEOFEXPR(LMIC));
 	LMIC.devaddr	 = 0;
 	LMIC.devNonce	= os_getRndU2();
 	LMIC.opmode	  = OP_NONE;
@@ -2459,7 +2487,7 @@ void LMIC_setTxData ()
 }
 
 //
-int LMIC_setTxData2 (u1_t port, xref2u1_t data, u1_t dlen, u1_t confirmed)
+int LMIC_setTxData2 (uint8_t port, xref2uint8_t data, uint8_t dlen, uint8_t confirmed)
 {
 	if ( dlen > SIZEOFEXPR(LMIC.pendTxData) )
 		return -2;

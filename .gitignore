@@ -29,3 +29,12 @@
 *.hex
 Debug/
 settings/
+*.uvguix.*
+*.uvgui.*
+*.uvmpw.uvgui.*
+*.uvoptx
+*.lst
+*.map
+*.dep
+*.b#?
+*.s#?
