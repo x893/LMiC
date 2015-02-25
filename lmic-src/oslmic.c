@@ -117,12 +117,14 @@ void os_runloop ()
 			j = OS.scheduledjobs;
 			OS.scheduledjobs = j->next;
 		}
-		else
-		{ // nothing pending
+		hal_enableIRQs();
+
+		if (j == NULL)
+		{
 			hal_sleep(); // wake by irq (timer already restarted)
 		}
-		hal_enableIRQs();
-		
+			
+
 		if (j)
 		{	// run job callback
 			j->func(j);

@@ -38,3 +38,5 @@ settings/
 *.dep
 *.b#?
 *.s#?
+RFM98W-L CLIENT/
+RFM98W-L SERVER/

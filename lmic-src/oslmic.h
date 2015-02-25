@@ -55,8 +55,8 @@ typedef      struct rxqu_t	rxqu_t;
 typedef   struct chnldef_t	chnldef_t;
 typedef   struct rxsched_t	rxsched_t;
 typedef   struct bcninfo_t	bcninfo_t;
-typedef        const uint8_t*	xref2cuint8_t;
-typedef              uint8_t*	xref2uint8_t;
+typedef    const uint8_t *	xref2cuint8_t;
+typedef          uint8_t *	xref2uint8_t;
 
 #define TYPEDEF_xref2rps_t     typedef	rps_t*		xref2rps_t
 #define TYPEDEF_xref2rxqu_t    typedef	rxqu_t*		xref2rxqu_t
@@ -65,7 +65,7 @@ typedef              uint8_t*	xref2uint8_t;
 #define TYPEDEF_xref2band_t    typedef	band_t*		xref2band_t
 #define TYPEDEF_xref2osjob_t   typedef	osjob_t*	xref2osjob_t
 
-#define SIZEOFEXPR(x) sizeof(x)
+#define SIZEOFEXPR(x)		sizeof(x)
 
 #define ON_LMIC_EVENT(ev)	onEvent(ev)
 #define DECL_ON_LMIC_EVENT	void onEvent(ev_t e)
@@ -76,12 +76,12 @@ extern uint32_t AESKEY[];
 #define AESaux			((uint8_t*)AESAUX)
 #define FUNC_ADDR(func)	(&(func))
 
-uint8_t radio_rand1 (void);
 #define os_getRndU1()	radio_rand1()
 
 #define DEFINE_LMIC		struct lmic_t LMIC
 #define DECLARE_LMIC	extern struct lmic_t LMIC
 
+uint8_t radio_rand1		(void);
 void radio_init			(void);
 void radio_irq_handler	(uint8_t dio);
 void os_init			(void);
@@ -122,9 +122,9 @@ struct osjob_t; // fwd decl.
 typedef void (*osjobcb_t) (struct osjob_t*);
 struct osjob_t
 {
-    struct osjob_t* next;
-    ostime_t deadline;
-    osjobcb_t  func;
+	struct osjob_t *	next;
+			ostime_t	deadline;
+			osjobcb_t	func;
 };
 TYPEDEF_xref2osjob_t;
 

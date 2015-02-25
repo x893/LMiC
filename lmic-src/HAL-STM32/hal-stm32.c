@@ -422,6 +422,8 @@ static void hal_time_init ()
 
 	if ((RCC->CSR & RCC_CSR_LSERDY) != 0 )
 		TIM9->SMCR = TIM_SMCR_ECE;	// external clock enable (source clock mode 2) with no prescaler and no filter
+	else
+		TIM9->PSC = 900;
 
 	NVIC->IP[TIM9_IRQn] = 0x70;	// interrupt priority
 	NVIC->ISER[TIM9_IRQn >> 5] = 1<<(TIM9_IRQn & 0x1F);	// set enable IRQ
@@ -518,8 +520,9 @@ void hal_enableIRQs ()
 
 void hal_sleep ()
 {
-	// low power sleep mode
-	PWR->CR |= PWR_CR_LPSDSR;
+	// low power sleep mode (if LSE enable)
+	if ((RCC->CSR & RCC_CSR_LSERDY) != 0)
+		PWR->CR |= PWR_CR_LPSDSR;
 	// suspend execution until IRQ, regardless of the CPSR I-bit
 	__WFI();
 }
@@ -595,14 +598,17 @@ void hal_failed ()
 
 	void debug_char (uint8_t c)
 	{
-		while ( !(USART1->SR & USART_SR_TXE) );	
+		if (c == '\n')
+			debug_char ('\r');
+		while ( !(USART1->SR & USART_SR_TXE) );
 		USART1->DR = c;
 	}
 
+	static const char debug_hex_string[] = "0123456789ABCDEF";
 	void debug_hex (uint8_t b)
 	{
-		debug_char("0123456789ABCDEF"[b >>  4]);
-		debug_char("0123456789ABCDEF"[b & 0xF]);
+		debug_char(debug_hex_string[b >>  4]);
+		debug_char(debug_hex_string[b & 0xF]);
 	}
 
 	void debug_buf (const uint8_t * buf, uint16_t len)
@@ -612,7 +618,6 @@ void hal_failed ()
 			debug_hex(*buf++);
 			debug_char(' ');
 		}
-		debug_char('\r');
 		debug_char('\n');
 	}
 
@@ -636,7 +641,6 @@ void hal_failed ()
 	{
 		debug_str(label);
 		debug_uint(val);
-		debug_char('\r');
 		debug_char('\n');
 	}
 
@@ -665,3 +669,48 @@ void hal_failed ()
 	}
 #endif // CFG_DEBUG
 
+void prvGetRegistersFromStack( uint32_t *pulFaultStackAddress )
+{
+/*	These are volatile to try and prevent the compiler/linker optimising them
+	away as the variables never actually get used.  If the debugger won't show the
+	values of the variables, make them global my moving their declaration outside
+	of this function.
+*/
+	volatile uint32_t r0;
+	volatile uint32_t r1;
+	volatile uint32_t r2;
+	volatile uint32_t r3;
+	volatile uint32_t r12;
+	volatile uint32_t lr; /* Link register. */
+	volatile uint32_t pc; /* Program counter. */
+	volatile uint32_t psr;/* Program status register. */
+
+	r0 = pulFaultStackAddress[ 0 ];
+	r1 = pulFaultStackAddress[ 1 ];
+	r2 = pulFaultStackAddress[ 2 ];
+	r3 = pulFaultStackAddress[ 3 ];
+
+	r12 = pulFaultStackAddress[ 4 ];
+	lr  = pulFaultStackAddress[ 5 ];
+	pc  = pulFaultStackAddress[ 6 ];
+	psr = pulFaultStackAddress[ 7 ];
+
+	debug_str("\n\n[Hard fault handler - all numbers in hex]\n");
+	debug_val("R0  = ", r0);
+	debug_val("R1  = ", r1);
+	debug_val("R2  = ", r2);
+	debug_val("R3  = ", r3);
+	debug_val("R12 = ", r12);
+	debug_val("LR [R14] = ", lr);	// %x  subroutine call return address\n
+	debug_val("PC [R15] = ", pc);	// %x  program counter\n
+	debug_val("PSR  = ", psr);
+	debug_val("BFAR = ", (*((volatile unsigned long *)(0xE000ED38))));
+	debug_val("CFSR = ", (*((volatile unsigned long *)(0xE000ED28))));
+	debug_val("HFSR = ", (*((volatile unsigned long *)(0xE000ED2C))));
+	debug_val("DFSR = ", (*((volatile unsigned long *)(0xE000ED30))));
+	debug_val("AFSR = ", (*((volatile unsigned long *)(0xE000ED3C))));
+	debug_val("SCB_SHCSR = ", SCB->SHCSR);
+
+    /* When the following line is hit, the variables contain the register values. */
+    for( ;; );
+}

@@ -54,7 +54,12 @@ static void startScan (void);
 	#ifndef os_rlsbf4
 	uint32_t os_rlsbf4 (xref2cuint8_t buf)
 	{
-		return (uint32_t)(buf[0] | (buf[1] << 8) | ((uint32_t)buf[2] << 16) | ((uint32_t)buf[3] << 24));
+		return (
+			((uint32_t)buf[0] <<  0) |
+			((uint32_t)buf[1] <<  8) |
+			((uint32_t)buf[2] << 16) |
+			((uint32_t)buf[3] << 24)
+		);
 	}
 	#endif
 
@@ -646,7 +651,7 @@ static void initDefaultChannels (uint8_t join)
 
 static uint32_t convFreq (xref2uint8_t ptr)
 {
-	uint32_t freq = (os_rlsbf4(ptr-1) >> 8) * 100;
+	uint32_t freq = (os_rlsbf4(ptr - 1) >> 8) * 100;
 	if ( freq >= EU434_FREQ_MIN && freq <= EU434_FREQ_MAX )
 		freq = 0;
 	return freq;
@@ -1282,9 +1287,10 @@ static uint8_t decodeFrame ()
 	uint8_t hdr	= d[0];
 	uint8_t ftype  = hdr & HDR_FTYPE;
 	int  dlen   = LMIC.dataLen;
-	if ( dlen < OFF_DAT_OPTS + 4
+	if (dlen < OFF_DAT_OPTS + 4
 	||	(hdr & HDR_MAJOR) != HDR_MAJOR_V1
-	||	(ftype != HDR_FTYPE_DADN  &&  ftype != HDR_FTYPE_DCDN) )
+	||	(ftype != HDR_FTYPE_DADN  &&  ftype != HDR_FTYPE_DCDN)
+		)
 	{
 		// Basic sanity checks failed
 		EV(specCond, WARN, (e_.reason = EV::specCond_t::UNEXPECTED_FRAME,
@@ -1295,6 +1301,7 @@ norx:
 		LMIC.dataLen = 0;
 		return 0;
 	}
+
 	// Validate exact frame length
 	// Note: device address was already read+evaluated in order to arrive here.
 	int  fct   = d[OFF_DAT_FCT];
@@ -1302,8 +1309,8 @@ norx:
 	uint32_t seqno = os_rlsbf2(&d[OFF_DAT_SEQNO]);
 	int  olen  = fct & FCT_OPTLEN;
 	int  ackup = (fct & FCT_ACK) != 0 ? 1 : 0;   // ACK last up frame
-	int  poff  = OFF_DAT_OPTS+olen;
-	int  pend  = dlen-4;  // MIC
+	int  poff  = OFF_DAT_OPTS + olen;
+	int  pend  = dlen - 4;	// MIC
 
 	if ( addr != LMIC.devaddr )
 	{
@@ -1313,12 +1320,12 @@ norx:
 							e_.info2  = LMIC.devaddr));
 		goto norx;
 	}
+
 	if ( poff > pend )
 	{
 		EV(specCond, ERR, (	e_.reason = EV::specCond_t::CORRUPTED_FRAME,
 							e_.eui	= MAIN::CDEV->getEui(),
-							e_.info   = 0x1000000 + (poff-pend) + (fct << 8) + (dlen << 16))
-		);
+							e_.info   = 0x1000000 + (poff-pend) + (fct << 8) + (dlen << 16)));
 		goto norx;
 	}
 
@@ -1330,15 +1337,15 @@ norx:
 
 	seqno = LMIC.seqnoDn + (int16_t)(seqno - LMIC.seqnoDn);
 
-	if ( !aes_verifyMic(LMIC.nwkKey, LMIC.devaddr, seqno, /*dn*/1, d, pend) )
+	if ( !aes_verifyMic(LMIC.nwkKey, LMIC.devaddr, seqno, /*dn*/ 1, d, pend) )
 	{
 		EV(specCond, ERR, (	e_.reason = EV::specCond_t::CORRUPTED_MIC,
 							e_.eui	= MAIN::CDEV->getEui(),
 							e_.info   = Base::lsbf4(&d[pend]),
-							e_.info2  = seqno)
-		);
+							e_.info2  = seqno));
 		goto norx;
 	}
+
 	if ( seqno < LMIC.seqnoDn )
 	{
 		if ( (int32_t)seqno > (int32_t)LMIC.seqnoDn )
@@ -1346,19 +1353,19 @@ norx:
 			EV(specCond, INFO, (e_.reason = EV::specCond_t::DNSEQNO_ROLL_OVER,
 								e_.eui	= MAIN::CDEV->getEui(),
 								e_.info   = LMIC.seqnoDn, 
-								e_.info2  = seqno)
-			);
+								e_.info2  = seqno));
 			goto norx;
 		}
+
 		if ( seqno != LMIC.seqnoDn - 1
 		||	!LMIC.dnConf
-		||	ftype != HDR_FTYPE_DCDN )
+		||	ftype != HDR_FTYPE_DCDN
+			)
 		{
 			EV(specCond, INFO, (e_.reason = EV::specCond_t::DNSEQNO_OBSOLETE,
 								e_.eui	= MAIN::CDEV->getEui(),
 								e_.info   = LMIC.seqnoDn, 
-								e_.info2  = seqno)
-			);
+								e_.info2  = seqno));
 			goto norx;
 		}
 		// Replay of previous sequence number allowed only if
@@ -1372,10 +1379,9 @@ norx:
 			EV(specCond, INFO, (e_.reason = EV::specCond_t::DNSEQNO_SKIP,
 								e_.eui	= MAIN::CDEV->getEui(),
 								e_.info   = LMIC.seqnoDn, 
-								e_.info2  = seqno)
-			);
+								e_.info2  = seqno));
 		}
-		LMIC.seqnoDn = seqno+1;  // next number to be expected
+		LMIC.seqnoDn = seqno + 1;	// next number to be expected
 		DO_DEVDB(updateSeqnoDn, LMIC.seqnoDn);
 		// DN frame requested confirmation - provide ACK once with next UP frame
 		LMIC.dnConf = (ftype == HDR_FTYPE_DCDN ? FCT_ACK : 0);
@@ -1396,151 +1402,149 @@ norx:
 	int oidx = 0;
 	while ( oidx < olen )
 	{
-		switch( opts[oidx] )
+		switch ( opts[oidx] )
 		{
 		case MCMD_LCHK_ANS:
-		{
-			//int gwmargin = opts[oidx+1];
-			//int ngws = opts[oidx+2];
-			oidx += 3;
-			continue;
-		}
+			{
+				//int gwmargin = opts[oidx+1];
+				//int ngws = opts[oidx+2];
+				oidx += 3;
+				continue;
+			}
 		case MCMD_LADR_REQ:
-		{
-			uint8_t p1	 = opts[oidx+1];			// txpow + DR
-			uint16_t chmap  = os_rlsbf2(&opts[oidx+2]);// list of enabled channel
-			uint8_t chpage = opts[oidx+4] & MCMD_LADR_CHPAGE_MASK;	 // channel page
-			uint8_t uprpt  = opts[oidx+4] & MCMD_LADR_REPEAT_MASK;	 // up repeat count
-			oidx += 5;
-
-			LMIC.ladrAns = 0x80 |	 // Include an answer into next frame up
-			MCMD_LADR_ANS_POWACK | MCMD_LADR_ANS_CHACK | MCMD_LADR_ANS_DRACK;
-			if ( !mapChannels(chpage, chmap) )
-				LMIC.ladrAns &= ~MCMD_LADR_ANS_CHACK;
-			dr_t dr = (dr_t)(p1>>MCMD_LADR_DR_SHIFT);
-			if ( !validDR(dr) )
 			{
-				LMIC.ladrAns &= ~MCMD_LADR_ANS_DRACK;
-				dr = (dr_t)LMIC.datarate;
-				EV(specCond, ERR, (	e_.reason = EV::specCond_t::BAD_MAC_CMD,
-									e_.eui	= MAIN::CDEV->getEui(),
-									e_.info   = Base::lsbf4(&d[pend]),
-									e_.info2  = Base::msbf4(&opts[oidx-4]))
-				);
+				uint8_t p1	 = opts[oidx+1];			// txpow + DR
+				uint16_t chmap  = os_rlsbf2(&opts[oidx+2]);// list of enabled channel
+				uint8_t chpage = opts[oidx+4] & MCMD_LADR_CHPAGE_MASK;	 // channel page
+				uint8_t uprpt  = opts[oidx+4] & MCMD_LADR_REPEAT_MASK;	 // up repeat count
+				oidx += 5;
+
+				LMIC.ladrAns = 0x80 |	 // Include an answer into next frame up
+				MCMD_LADR_ANS_POWACK | MCMD_LADR_ANS_CHACK | MCMD_LADR_ANS_DRACK;
+				if ( !mapChannels(chpage, chmap) )
+					LMIC.ladrAns &= ~MCMD_LADR_ANS_CHACK;
+				dr_t dr = (dr_t)(p1>>MCMD_LADR_DR_SHIFT);
+				if ( !validDR(dr) )
+				{
+					LMIC.ladrAns &= ~MCMD_LADR_ANS_DRACK;
+					dr = (dr_t)LMIC.datarate;
+					EV(specCond, ERR, (	e_.reason = EV::specCond_t::BAD_MAC_CMD,
+										e_.eui	= MAIN::CDEV->getEui(),
+										e_.info   = Base::lsbf4(&d[pend]),
+										e_.info2  = Base::msbf4(&opts[oidx-4]))
+					);
+				}
+				LMIC.upRepeat = uprpt;
+				setDrTxpow(DRCHG_NWKCMD, dr, pow2dBm(p1));
+				LMIC.adrChanged = 1;  // Trigger an ACK to NWK
+				continue;
 			}
-			LMIC.upRepeat = uprpt;
-			setDrTxpow(DRCHG_NWKCMD, dr, pow2dBm(p1));
-			LMIC.adrChanged = 1;  // Trigger an ACK to NWK
-			continue;
-		}
 		case MCMD_DEVS_REQ:
-		{
-			LMIC.devsAns = 1;
-			oidx += 1;
-			continue;
-		}
+			{
+				LMIC.devsAns = 1;
+				oidx += 1;
+				continue;
+			}
 		case MCMD_DN2P_SET:
-		{
-			dr_t dr = (dr_t)(opts[oidx+1] & 0x0F);
-			uint32_t freq = convFreq(&opts[oidx+2]);
-			oidx += 5;
-			LMIC.dn2Ans = 0x80;   // answer pending
-			if ( validDR(dr) )
-				LMIC.dn2Ans |= MCMD_DN2P_ANS_DRACK;
-			if ( freq != 0 )
-				LMIC.dn2Ans |= MCMD_DN2P_ANS_CHACK;
-			if ( LMIC.dn2Ans == (0x80|MCMD_DN2P_ANS_DRACK|MCMD_DN2P_ANS_CHACK) )
 			{
-				LMIC.dn2Dr = dr;
-				LMIC.dn2Freq = freq;
-				DO_DEVDB(updateDn2,LMIC.dn2Dr,LMIC.dn2Freq);
+				dr_t dr = (dr_t)(opts[oidx+1] & 0x0F);
+				uint32_t freq = convFreq(&opts[oidx+2]);
+				oidx += 5;
+				LMIC.dn2Ans = 0x80;   // answer pending
+				if ( validDR(dr) )
+					LMIC.dn2Ans |= MCMD_DN2P_ANS_DRACK;
+				if ( freq != 0 )
+					LMIC.dn2Ans |= MCMD_DN2P_ANS_CHACK;
+				if ( LMIC.dn2Ans == (0x80|MCMD_DN2P_ANS_DRACK|MCMD_DN2P_ANS_CHACK) )
+				{
+					LMIC.dn2Dr = dr;
+					LMIC.dn2Freq = freq;
+					DO_DEVDB(updateDn2,LMIC.dn2Dr,LMIC.dn2Freq);
+				}
+				continue;
 			}
-			continue;
-		}
 		case MCMD_DCAP_REQ:
-		{
-			uint8_t cap = opts[oidx + 1];
-			oidx += 2;
-			// A value cap=0xFF means device is OFF unless enabled again manually
-			// We just set duty cap to 0xF which is 0.003% -- pretty much off.
-			// We don't check 0xF0 bits if cap!=0xFF
-			LMIC.globalDutyRate  = cap & 0xF;
-			LMIC.globalDutyAvail = os_getTime();
-			DO_DEVDB(updateDutyCap,cap);
-			LMIC.dutyCapAns = 1;
-			continue;
-		}
+			{
+				uint8_t cap = opts[oidx + 1];
+				oidx += 2;
+				// A value cap=0xFF means device is OFF unless enabled again manually
+				// We just set duty cap to 0xF which is 0.003% -- pretty much off.
+				// We don't check 0xF0 bits if cap!=0xFF
+				LMIC.globalDutyRate  = cap & 0xF;
+				LMIC.globalDutyAvail = os_getTime();
+				DO_DEVDB(updateDutyCap,cap);
+				LMIC.dutyCapAns = 1;
+				continue;
+			}
 		case MCMD_SNCH_REQ:
-		{
-			uint8_t chidx = opts[oidx+1];  // channel
-			uint32_t freq  = convFreq(&opts[oidx+2]); // freq
-			uint8_t drs   = opts[oidx+5];  // datarate span
-			LMIC.snchAns = 0x80;
-			if ( freq != 0 && setupChannel(chidx,freq,drs) )
-				LMIC.snchAns |= MCMD_SNCH_ANS_DRACK|MCMD_SNCH_ANS_FQACK;
-			oidx += 6;
-		}
+			{
+				uint8_t chidx = opts[oidx + 1];				// channel
+				uint32_t freq  = convFreq(&opts[oidx + 2]);	// freq
+				uint8_t drs   = opts[oidx+5];				// datarate span
+				LMIC.snchAns = 0x80;
+				if ( freq != 0 && setupChannel(chidx, freq, drs) )
+					LMIC.snchAns |= (MCMD_SNCH_ANS_DRACK | MCMD_SNCH_ANS_FQACK);
+				oidx += 6;
+				continue;	// !!! absent
+			}
 		case MCMD_PING_SET:
-		{
-			uint32_t freq = convFreq(&opts[oidx+1]);
-			oidx += 4;
-			uint8_t flags = 0x80;
-			if ( freq != 0 )
 			{
-				flags |= MCMD_PING_ANS_FQACK;
-				LMIC.ping.freq = freq;
-				DO_DEVDB(updateClassB,LMIC.ping.intvExp,freq,LMIC.ping.dr);
+				uint32_t freq = convFreq(&opts[oidx+1]);
+				oidx += 4;
+				uint8_t flags = 0x80;
+				if ( freq != 0 )
+				{
+					flags |= MCMD_PING_ANS_FQACK;
+					LMIC.ping.freq = freq;
+					DO_DEVDB(updateClassB,LMIC.ping.intvExp,freq,LMIC.ping.dr);
+				}
+				LMIC.pingSetAns = flags;
+				continue;
 			}
-			LMIC.pingSetAns = flags;
-			continue;
-		}
 		case MCMD_BCNI_ANS:
-		{
-			// Ignore if tracking already enabled
-			if ( (LMIC.opmode & OP_TRACK) == 0 )
 			{
-				LMIC.bcnChnl = opts[oidx+3];
-				// Enable tracking - bcninfoTries
-				LMIC.opmode |= OP_TRACK;
-				// Cleared later in txComplete handling - triggers EV_BEACON_FOUND
-				ASSERT(LMIC.bcninfoTries!=0);
-				// Setup RX parameters
-				LMIC.bcninfo.txtime =  (
-						LMIC.rxtime
-						- calcAirTime(LMIC.rps, LMIC.dataLen)
-						+ ms2osticks(os_rlsbf2(&opts[oidx+1]) * 10)
-						+ ms2osticksCeil(5)
-						- BCN_INTV_osticks
-				);
-				LMIC.bcninfo.flags = 0;  // txtime above cannot be used as reference (BCN_PARTIAL|BCN_FULL cleared)
-				calcBcnRxWindowFromMillis(10,1);  // error of +/-5 ms 
+				// Ignore if tracking already enabled
+				if ( (LMIC.opmode & OP_TRACK) == 0 )
+				{
+					LMIC.bcnChnl = opts[oidx+3];
+					// Enable tracking - bcninfoTries
+					LMIC.opmode |= OP_TRACK;
+					// Cleared later in txComplete handling - triggers EV_BEACON_FOUND
+					ASSERT(LMIC.bcninfoTries!=0);
+					// Setup RX parameters
+					LMIC.bcninfo.txtime =  (
+							LMIC.rxtime
+							- calcAirTime(LMIC.rps, LMIC.dataLen)
+							+ ms2osticks(os_rlsbf2(&opts[oidx+1]) * 10)
+							+ ms2osticksCeil(5)
+							- BCN_INTV_osticks
+					);
+					LMIC.bcninfo.flags = 0;  // txtime above cannot be used as reference (BCN_PARTIAL|BCN_FULL cleared)
+					calcBcnRxWindowFromMillis(10,1);  // error of +/-5 ms 
 
-				EV(lostFrame, INFO, (	e_.reason  = EV::lostFrame_t::MCMD_BCNI_ANS,
-										e_.eui	 = MAIN::CDEV->getEui(),
-										e_.lostmic = Base::lsbf4(&d[pend]),
-										e_.info	= (LMIC.missedBcns |
-											(osticks2us(LMIC.bcninfo.txtime + BCN_INTV_osticks
-											- LMIC.bcnRxtime) << 8)),
-										e_.time	= MAIN::CDEV->ostime2ustime(LMIC.bcninfo.txtime + BCN_INTV_osticks))
-				);
+					EV(lostFrame, INFO, (	e_.reason  = EV::lostFrame_t::MCMD_BCNI_ANS,
+											e_.eui	 = MAIN::CDEV->getEui(),
+											e_.lostmic = Base::lsbf4(&d[pend]),
+											e_.info	= (LMIC.missedBcns |
+												(osticks2us(LMIC.bcninfo.txtime + BCN_INTV_osticks
+												- LMIC.bcnRxtime) << 8)),
+											e_.time	= MAIN::CDEV->ostime2ustime(LMIC.bcninfo.txtime + BCN_INTV_osticks)));
+				}
+				oidx += 4;
+				continue;
 			}
-			oidx += 4;
-			continue;
-		}
 		}
 		EV(specCond, ERR, (	e_.reason = EV::specCond_t::BAD_MAC_CMD,
 							e_.eui	= MAIN::CDEV->getEui(),
 							e_.info   = Base::lsbf4(&d[pend]),
-							e_.info2  = Base::msbf4(&opts[oidx]))
-		);
+							e_.info2  = Base::msbf4(&opts[oidx])));
 		break;
 	}
 	if ( oidx != olen )
 	{
 		EV(specCond, ERR, (	e_.reason = EV::specCond_t::CORRUPTED_FRAME,
 							e_.eui	= MAIN::CDEV->getEui(),
-							e_.info   = 0x1000000 + (oidx) + (olen<<8))
-		);
+							e_.info   = 0x1000000 + (oidx) + (olen << 8)));
 	}
 
 	if ( !replayConf )
@@ -1548,7 +1552,7 @@ norx:
 		// Handle payload only if not a replay
 		// Decrypt payload - if any
 		if ( port >= 0  &&  pend-poff > 0 )
-			aes_cipher(port <= 0 ? LMIC.nwkKey : LMIC.artKey, LMIC.devaddr, seqno, /*dn*/1, d+poff, pend-poff);
+			aes_cipher(port <= 0 ? LMIC.nwkKey : LMIC.artKey, LMIC.devaddr, seqno, /*dn*/1, d + poff, pend - poff);
 
 		EV(dfinfo, DEBUG, (	e_.deveui  = MAIN::CDEV->getEui(),
 							e_.devaddr = LMIC.devaddr,
@@ -1567,8 +1571,7 @@ norx:
 		EV(specCond, INFO, (e_.reason = EV::specCond_t::DNSEQNO_REPLAY,
 							e_.eui	= MAIN::CDEV->getEui(),
 							e_.info   = Base::lsbf4(&d[pend]),
-							e_.info2  = seqno)
-		);
+							e_.info2  = seqno));
 	}
 
 	if ( // NWK acks but we don't have a frame pending
@@ -1576,13 +1579,13 @@ norx:
 		// We sent up confirmed and we got a response in DNW1/DNW2
 		// BUT it did not carry an ACK - this should never happen
 		// Do not resend and assume frame was not ACKed.
-	||	(!ackup && LMIC.txCnt != 0) )
+	||	(!ackup && LMIC.txCnt != 0)
+		)
 	{
 		EV(specCond, ERR, (	e_.reason = EV::specCond_t::SPURIOUS_ACK,
 							e_.eui	= MAIN::CDEV->getEui(),
 							e_.info   = seqno,
-							e_.info2  = ackup)
-		);
+							e_.info2  = ackup));
 	}
 
 	if ( LMIC.txCnt != 0 ) // we requested an ACK
@@ -1696,8 +1699,7 @@ nojoinframe:
 		EV(devCond, DEBUG, (e_.reason = EV::devCond_t::NO_JACC,
 							e_.eui	= MAIN::CDEV->getEui(),
 							e_.info   = LMIC.datarate|DR_PAGE,
-							e_.info2  = osticks2ms(delay))
-		);
+							e_.info2  = osticks2ms(delay)));
 		// Build next JOIN REQUEST with next engineUpdate call
 		// Optionally, report join failed.
 		// Both after a random/chosen amount of ticks.
@@ -1716,8 +1718,7 @@ nojoinframe:
 		EV(specCond, ERR, (	e_.reason = EV::specCond_t::UNEXPECTED_FRAME,
 							e_.eui	= MAIN::CDEV->getEui(),
 							e_.info   = dlen < 4 ? 0 : mic,
-							e_.info2  = hdr + (dlen<<8))
-		);
+							e_.info2  = hdr + (dlen<<8)));
 badframe:
 		goto nojoinframe;
 	}
@@ -1737,6 +1738,7 @@ badframe:
 #elif CFG_eu868
 	initDefaultChannels(0);
 #endif
+
 	if ( dlen > LEN_JA )
 	{
 		dlen = OFF_CFLIST;
@@ -1834,7 +1836,6 @@ static void updataDone (xref2osjob_t osjob)
 }
 
 // ======================================== 
-
 
 static void buildDataFrame ()
 {
@@ -2038,9 +2039,18 @@ void LMIC_disableTracking ()
 	engineUpdate();
 }
 
-__weak void os_getArtEui (xref2uint8_t buf) { }
-__weak void os_getDevEui (xref2uint8_t buf) { }
-__weak void os_getDevKey (xref2uint8_t buf) { }
+__weak void os_getArtEui (xref2uint8_t buf)
+{
+	memset(buf, 0, 8);
+}
+__weak void os_getDevEui (xref2uint8_t buf)
+{
+	memset(buf, 0, 8);
+}
+__weak void os_getDevKey (xref2uint8_t buf)
+{
+	memset(buf, 0, 16);
+}
 
 // ================================================================================
 //

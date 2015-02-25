@@ -129,64 +129,73 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     TIM7_IRQHandler           ; TIM7
 __Vectors_End
 
-__Vectors_Size  EQU  __Vectors_End - __Vectors
-
-                AREA    |.text|, CODE, READONLY
+__Vectors_Size		EQU  __Vectors_End - __Vectors
+					AREA    |.text|, CODE, READONLY
 
 ; Reset handler routine
-Reset_Handler    PROC
-                 EXPORT  Reset_Handler             [WEAK]
-        IMPORT  __main
-        IMPORT  SystemInit  
-                 LDR     R0, =SystemInit
-                 BLX     R0              
-                 LDR     R0, =__main
-                 BX      R0
-                 ENDP
+Reset_Handler		PROC
+					EXPORT	Reset_Handler			[WEAK]
+					IMPORT	__main
+					IMPORT	SystemInit  
+					LDR		R0, =SystemInit
+					BLX		R0              
+					LDR		R0, =__main
+					BX		R0
+					ENDP
 
 ; Dummy Exception Handlers (infinite loops which can be modified)
 
-NMI_Handler     PROC
-                EXPORT  NMI_Handler                [WEAK]
-                B       .
-                ENDP
-HardFault_Handler\
-                PROC
-                EXPORT  HardFault_Handler          [WEAK]
-                B       .
-                ENDP
-MemManage_Handler\
-                PROC
-                EXPORT  MemManage_Handler          [WEAK]
-                B       .
-                ENDP
-BusFault_Handler\
-                PROC
-                EXPORT  BusFault_Handler           [WEAK]
-                B       .
-                ENDP
-UsageFault_Handler\
-                PROC
-                EXPORT  UsageFault_Handler         [WEAK]
-                B       .
-                ENDP
-SVC_Handler     PROC
-                EXPORT  SVC_Handler                [WEAK]
-                B       .
-                ENDP
-DebugMon_Handler\
-                PROC
-                EXPORT  DebugMon_Handler           [WEAK]
-                B       .
-                ENDP
-PendSV_Handler  PROC
-                EXPORT  PendSV_Handler             [WEAK]
-                B       .
-                ENDP
-SysTick_Handler PROC
-                EXPORT  SysTick_Handler            [WEAK]
-                B       .
-                ENDP
+NMI_Handler			PROC
+					EXPORT	NMI_Handler				[WEAK]
+					B		.
+					ENDP
+
+HardFault_Handler	PROC
+					EXPORT	HardFault_Handler		[WEAK]
+					IMPORT	prvGetRegistersFromStack
+					TST		LR, #4
+					ITE		EQ
+					MRSEQ	R0, MSP
+					MRSNE	R0, PSP
+					LDR		R1, [R0, #24]
+					LDR		R2, =prvGetRegistersFromStack
+					BX		R2
+					ENDP
+
+MemManage_Handler	PROC
+					EXPORT	MemManage_Handler		[WEAK]
+					B		.
+					ENDP
+
+BusFault_Handler	PROC
+					EXPORT	BusFault_Handler		[WEAK]
+					B		.
+					ENDP
+
+UsageFault_Handler	PROC
+					EXPORT	UsageFault_Handler		[WEAK]
+					B		.
+					ENDP
+
+SVC_Handler			PROC
+					EXPORT	SVC_Handler				[WEAK]
+					B		.
+					ENDP
+
+DebugMon_Handler	PROC
+					EXPORT	DebugMon_Handler		[WEAK]
+					B		.
+					ENDP
+
+PendSV_Handler		PROC
+					EXPORT	PendSV_Handler			[WEAK]
+					B		.
+					ENDP
+
+SysTick_Handler		PROC
+					EXPORT	SysTick_Handler			[WEAK]
+					B		.
+					ENDP
 
 Default_Handler PROC
 
