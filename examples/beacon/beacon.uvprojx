@@ -7,21 +7,19 @@
 
   <Targets>
     <Target>
-      <TargetName>hello</TargetName>
+      <TargetName>Target 1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>STM32L151CB</Device>
+          <Device>STM32L151C6</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32L1xx_DFP.1.0.2</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
-          <Cpu>IROM(0x08000000,0x20000) IRAM(0x20000000,0x4000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu>IROM(0x08000000,0x8000) IRAM(0x20000000,0x2800) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32L1xx_128 -FS08000000 -FL020000 -FP0($$Device:STM32L151CB$Flash\STM32L1xx_128.FLM))</FlashDriverDll>
-          <DeviceId>5244</DeviceId>
-          <RegisterFile>$$Device:STM32L151CB$Device\Include\STM32L1xx.h</RegisterFile>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32L1xx_128 -FS08000000 -FL08000 -FP0($$Device:STM32L151C6$Flash\STM32L1xx_128.FLM))</FlashDriverDll>
+          <DeviceId>6222</DeviceId>
+          <RegisterFile>$$Device:STM32L151C6$Device\Include\STM32L1xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -31,7 +29,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:STM32L151CB$SVD\STM32L1xx.svd</SFDFile>
+          <SFDFile>$$Device:STM32L151C6$SVD\STM32L1xx.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -46,14 +44,14 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\Debug\</OutputDirectory>
-          <OutputName>hello</OutputName>
+          <OutputDirectory>.\build\</OutputDirectory>
+          <OutputName>beacon</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Listings\</ListingPath>
+          <ListingPath>.\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -145,6 +143,7 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
+            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>11</TargetSelection>
@@ -196,7 +195,7 @@
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
-            <AdsALst>1</AdsALst>
+            <AdsALst>0</AdsALst>
             <AdsACrf>1</AdsACrf>
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
@@ -280,12 +279,12 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x4000</Size>
+                <Size>0x2800</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x20000</Size>
+                <Size>0x8000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -310,7 +309,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x20000</Size>
+                <Size>0x8000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -335,7 +334,7 @@
               <OCR_RVCT9>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x4000</Size>
+                <Size>0x2800</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -350,7 +349,7 @@
             <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
-            <OneElfS>1</OneElfS>
+            <OneElfS>0</OneElfS>
             <Strict>0</Strict>
             <EnumInt>0</EnumInt>
             <PlainCh>0</PlainCh>
@@ -363,9 +362,9 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>CFG_eu434 CFG_DEBUG CFG_x893_board CFG_RFM98W_radio CFG_noassert</Define>
+              <Define>STM32L1XX_MD CFG_lmic_clib CFG_eu868 CFG_wimod_board CFG_sx1272_radio</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\lmic-src;..\..\lmic-src\HAL-STM32</IncludePath>
+              <IncludePath>../../lmic;../../stm32</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -386,7 +385,7 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>1</umfTarg>
+            <umfTarg>0</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
@@ -406,7 +405,7 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>src</GroupName>
+          <GroupName>app</GroupName>
           <Files>
             <File>
               <FileName>main.c</FileName>
@@ -416,52 +415,118 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>lmic-src</GroupName>
+          <GroupName>lmic</GroupName>
           <Files>
             <File>
-              <FileName>oslmic.c</FileName>
+              <FileName>aes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\lmic-src\oslmic.c</FilePath>
+              <FilePath>..\..\lmic\aes.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\lmic\hal.h</FilePath>
             </File>
             <File>
               <FileName>lmic.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\lmic-src\lmic.c</FilePath>
+              <FilePath>..\..\lmic\lmic.c</FilePath>
             </File>
             <File>
-              <FileName>aes.c</FileName>
+              <FileName>lmic.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\lmic\lmic.h</FilePath>
+            </File>
+            <File>
+              <FileName>lorabase.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\lmic\lorabase.h</FilePath>
+            </File>
+            <File>
+              <FileName>oslmic.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\lmic-src\aes.c</FilePath>
+              <FilePath>..\..\lmic\oslmic.c</FilePath>
+            </File>
+            <File>
+              <FileName>oslmic.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\lmic\oslmic.h</FilePath>
             </File>
             <File>
               <FileName>radio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\lmic-src\radio.c</FilePath>
+              <FilePath>..\..\lmic\radio.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>HAL-STM32</GroupName>
+          <GroupName>stm32</GroupName>
           <Files>
             <File>
-              <FileName>hal-stm32.c</FileName>
+              <FileName>debug.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\lmic-src\HAL-STM32\hal-stm32.c</FilePath>
+              <FilePath>..\..\stm32\debug.c</FilePath>
             </File>
             <File>
-              <FileName>startup_stm32l1xx_md.s</FileName>
+              <FileName>debug.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\stm32\debug.h</FilePath>
+            </File>
+            <File>
+              <FileName>hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\stm32\hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>hw.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\stm32\hw.c</FilePath>
+            </File>
+            <File>
+              <FileName>hw.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\stm32\hw.h</FilePath>
+            </File>
+            <File>
+              <FileName>startup_stm32l1xx_md_keil.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\lmic-src\HAL-STM32\MDK-ARM\startup_stm32l1xx_md.s</FilePath>
+              <FilePath>..\..\stm32\startup_stm32l1xx_md_keil.s</FilePath>
+            </File>
+            <File>
+              <FileName>stm32l1xx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\stm32\stm32l1xx.h</FilePath>
             </File>
             <File>
               <FileName>system_stm32l1xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\lmic-src\HAL-STM32\MDK-ARM\system_stm32l1xx.c</FilePath>
+              <FilePath>..\..\stm32\system_stm32l1xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>system_stm32l1xx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\stm32\system_stm32l1xx.h</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
     </Target>
   </Targets>
+
+  <RTE>
+    <apis/>
+    <components>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="3.30.0" condition="CMSIS Core">
+        <package name="CMSIS" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="ARM" version="4.1.0"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+    </components>
+    <files/>
+  </RTE>
 
 </Project>

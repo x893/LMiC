@@ -1,15 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corporation.
+ * Copyright (c) 2014-2015 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *	IBM Zurich Research Lab - initial API, implementation and documentation
+ *    IBM Zurich Research Lab - initial API, implementation and documentation
  *******************************************************************************/
 
 #include "lmic.h"
+#include "debug.h"
 
 //////////////////////////////////////////////////
 // CONFIGURATION (FOR APPLICATION CALLBACKS BELOW)
@@ -31,17 +32,17 @@ static const u1_t DEVKEY[16] = { 0xAB, 0x89, 0xEF, 0xCD, 0x23, 0x01, 0x67, 0x45,
 
 // provide application router ID (8 bytes, LSBF)
 void os_getArtEui (u1_t* buf) {
-	memcpy(buf, APPEUI, 8);
+    memcpy(buf, APPEUI, 8);
 }
 
 // provide device ID (8 bytes, LSBF)
 void os_getDevEui (u1_t* buf) {
-	memcpy(buf, DEVEUI, 8);
+    memcpy(buf, DEVEUI, 8);
 }
 
 // provide device key (16 bytes)
 void os_getDevKey (u1_t* buf) {
-	memcpy(buf, DEVKEY, 16);
+    memcpy(buf, DEVKEY, 16);
 }
 
 
@@ -51,25 +52,28 @@ void os_getDevKey (u1_t* buf) {
 
 // initial job
 static void initfunc (osjob_t* j) {
-	// reset MAC state
-	LMIC_reset();
-	// start joining
-	LMIC_startJoining();
-	// init done - onEvent() callback will be invoked...
+    // reset MAC state
+    LMIC_reset();
+    // start joining
+    LMIC_startJoining();
+    // init done - onEvent() callback will be invoked...
 }
 
 
 // application entry point
-void main () {
-	osjob_t initjob;
+int main () {
+    osjob_t initjob;
 
-	// initialize runtime env
-	os_init();
-	// setup initial job
-	os_setCallback(&initjob, initfunc);
-	// execute scheduled jobs and events
-	os_runloop();
-	// (not reached)
+    // initialize runtime env
+    os_init();
+    // initialize debug library
+    debug_init();
+    // setup initial job
+    os_setCallback(&initjob, initfunc);
+    // execute scheduled jobs and events
+    os_runloop();
+    // (not reached)
+    return 0;
 }
 
 
@@ -77,34 +81,33 @@ void main () {
 // LMIC EVENT CALLBACK
 //////////////////////////////////////////////////
 
-void onEvent (ev_t ev)
-{
-	DEBUG_EVENT(ev);
-	switch(ev)
-	{
-	// network joined, session established
-	case EV_JOINED:
-		// enable pinging mode, start scanning...
-		// (set local ping interval configuration to 2^1 == 2 sec)
-		LMIC_setPingable(1);
-		DEBUG_STR("SCANNING...\r\n");
-		break;
+void onEvent (ev_t ev) {
+    debug_event(ev);
 
-	// beacon found by scanning
-	case EV_BEACON_FOUND:
-		// send empty frame up to notify server of ping mode and interval!
-		LMIC_sendAlive();
-		break;
+    switch(ev) {
+   
+      // network joined, session established
+      case EV_JOINED:
+          // enable pinging mode, start scanning...
+          // (set local ping interval configuration to 2^1 == 2 sec)
+          LMIC_setPingable(1);
+          debug_str("SCANNING...\r\n");
+          break;
 
-	// data frame received in ping slot
-	case EV_RXCOMPLETE:
-		// log frame data
-		DEBUG_BUF(LMIC.frame+LMIC.dataBeg, LMIC.dataLen);
-		if(LMIC.dataLen == 1)
-		{
-			// set LED state if exactly one byte is received
-			DEBUG_LED(LMIC.frame[LMIC.dataBeg] & 0x01);
-		}
-		break;	
-	}
+      // beacon found by scanning
+      case EV_BEACON_FOUND:
+          // send empty frame up to notify server of ping mode and interval!
+          LMIC_sendAlive();
+          break;
+
+      // data frame received in ping slot
+      case EV_RXCOMPLETE:
+          // log frame data
+          debug_buf(LMIC.frame+LMIC.dataBeg, LMIC.dataLen);
+          if(LMIC.dataLen == 1) {
+              // set LED state if exactly one byte is received
+              debug_led(LMIC.frame[LMIC.dataBeg] & 0x01);
+          }
+          break;    
+    }
 }

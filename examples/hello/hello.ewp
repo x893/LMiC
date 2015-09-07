@@ -39,20 +39,20 @@
         <option>
           <name>Input variant</name>
           <version>3</version>
-          <state>7</state>
+          <state>0</state>
         </option>
         <option>
           <name>Input description</name>
-          <state>No specifier n, no float nor long long, no scan set, no assignment suppressing, without multibyte support.</state>
+          <state>Automatic choice of formatter.</state>
         </option>
         <option>
           <name>Output variant</name>
           <version>2</version>
-          <state>6</state>
+          <state>0</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>No specifier a, A, no specifier n, no float nor long long, without multibyte support.</state>
+          <state>Automatic choice of formatter.</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -87,7 +87,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.50.3.4744</state>
+          <state>6.50.1.4445</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -99,11 +99,11 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>stm32l151xB	ST stm32l151xB</state>
+          <state>STM32L152xB	ST STM32L152xB</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GEndianModeBE</name>
@@ -115,7 +115,7 @@
         </option>
         <option>
           <name>GenStdoutInterface</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GeneralMisraRules98</name>
@@ -165,11 +165,11 @@
         <option>
           <name>CCDefines</name>
           <state>STM32L1XX_MD</state>
-          <state>CFG_eu434</state>
+          <state>CFG_lmic_clib</state>
+          <state>CFG_eu868</state>
           <state>CFG_DEBUG</state>
-          <state>CFG_x893_board</state>
-          <state>CFG_RFM98W_radio</state>
-          <state>CFG_assert</state>
+          <state>CFG_wimod_board</state>
+          <state>CFG_sx1272_radio</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -298,8 +298,8 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>$PROJ_DIR$\..\..\lmic-src</state>
-          <state>$PROJ_DIR$\..\..\lmic-src\HAL-STM32</state>
+          <state>$PROJ_DIR$\..\..\lmic</state>
+          <state>$PROJ_DIR$\..\..\stm32</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -586,7 +586,7 @@
         </option>
         <option>
           <name>OOCObjCopyEnable</name>
-          <state>0</state>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -696,7 +696,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$TOOLKIT_DIR$\config\linker\ST\stm32l151xB.icf</state>
+          <state>$TOOLKIT_DIR$\config\linker\ST\stm32l152xB.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1841,45 +1841,60 @@
     </settings>
   </configuration>
   <group>
-    <name>LMIC</name>
-    <group>
-      <name>HAL</name>
-      <file>
-        <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\hal-stm32.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\startup_stm32l1xx_md.s</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\stm32l1xx.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\lmic-src\HAL-STM32\system_stm32l1xx.c</name>
-      </file>
-    </group>
+    <name>LMiC</name>
     <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\aes.c</name>
+      <name>$PROJ_DIR$\..\..\lmic\aes.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\hal.h</name>
+      <name>$PROJ_DIR$\..\..\lmic\hal.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\lmic.c</name>
+      <name>$PROJ_DIR$\..\..\lmic\lmic.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\lmic.h</name>
+      <name>$PROJ_DIR$\..\..\lmic\lmic.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\lorabase.h</name>
+      <name>$PROJ_DIR$\..\..\lmic\lorabase.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\oslmic.c</name>
+      <name>$PROJ_DIR$\..\..\lmic\oslmic.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\oslmic.h</name>
+      <name>$PROJ_DIR$\..\..\lmic\oslmic.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\lmic-src\radio.c</name>
+      <name>$PROJ_DIR$\..\..\lmic\radio.c</name>
+    </file>
+  </group>
+  <group>
+    <name>STM32</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\stm32\debug.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\stm32\debug.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\stm32\hal.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\stm32\hw.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\stm32\hw.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\stm32\startup_stm32l1xx_md_iar.s</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\stm32\stm32l1xx.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\stm32\system_stm32l1xx.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\stm32\system_stm32l1xx.h</name>
     </file>
   </group>
   <file>
